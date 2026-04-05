@@ -1,30 +1,27 @@
 import { createClient } from '@/lib/supabase-server'
-import { calcAmort, monthlyFromSub, fmt } from '@/lib/calc'
-import type { AmortItem, SubItem } from '@/lib/types'
+import { calcAmort, monthlyFromSub } from '@/lib/calc'
+import type { Entry } from '@/lib/types'
 import DashboardClient from '@/components/app/DashboardClient'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
-  const [{ data: items }, { data: subs }] = await Promise.all([
-    supabase.from('items').select('*').eq('user_id', user!.id).order('created_at', { ascending: false }),
-    supabase.from('subs').select('*').eq('user_id', user!.id).order('created_at', { ascending: false }),
-  ])
+  const { data } = await supabase
+    .from('entries').select('*').eq('user_id', user!.id).order('created_at', { ascending: false })
 
-  const safeItems: AmortItem[] = items ?? []
-  const safeSubs: SubItem[] = subs ?? []
+  const entries: Entry[] = data ?? []
 
-  // Compute summary on server
-  const activeAmorts = safeItems.filter(it => !calcAmort(it).alreadyDone)
-  const amortMonthly = activeAmorts.reduce((s, it) => s + it.monthly, 0)
-  const subsMonthly = safeSubs.reduce((s, sub) => s + monthlyFromSub(sub), 0)
-  const totalPending = safeItems.reduce((s, it) => s + calcAmort(it).virtualPrice, 0)
+  const amortEntries = entries.filter(e => e.type === 'amort')
+  const subEntries = entries.filter(e => e.type === 'sub')
+  const activeAmorts = amortEntries.filter(e => !calcAmort(e).alreadyDone)
+  const amortMonthly = activeAmorts.reduce((s, e) => s + e.monthly!, 0)
+  const subsMonthly = subEntries.reduce((s, e) => s + monthlyFromSub(e), 0)
+  const totalPending = amortEntries.reduce((s, e) => s + calcAmort(e).virtualPrice, 0)
 
   return (
     <DashboardClient
-      initialItems={safeItems}
-      initialSubs={safeSubs}
+      initialEntries={entries}
       totalMonthly={amortMonthly + subsMonthly}
       totalPending={totalPending}
     />
