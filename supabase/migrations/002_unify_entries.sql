@@ -28,6 +28,11 @@ from public.subs;
 -- Enable RLS
 alter table public.entries enable row level security;
 
+drop policy if exists "Users can read own entries"   on public.entries;
+drop policy if exists "Users can insert own entries" on public.entries;
+drop policy if exists "Users can update own entries" on public.entries;
+drop policy if exists "Users can delete own entries" on public.entries;
+
 create policy "Users can read own entries"   on public.entries for select using (auth.uid() = user_id);
 create policy "Users can insert own entries" on public.entries for insert with check (auth.uid() = user_id);
 create policy "Users can update own entries" on public.entries for update using (auth.uid() = user_id);

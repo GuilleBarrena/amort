@@ -4,6 +4,15 @@ const { Client } = require('pg');
 const fs = require('fs');
 const path = require('path');
 
+// Load .env.local in development
+const envFile = path.join(__dirname, '..', '.env.local');
+if (fs.existsSync(envFile)) {
+  for (const line of fs.readFileSync(envFile, 'utf8').split('\n')) {
+    const match = line.match(/^([^#=]+)=(.*)$/)
+    if (match) process.env[match[1].trim()] ??= match[2].trim()
+  }
+}
+
 const MIGRATIONS_DIR = path.join(__dirname, '..', 'supabase', 'migrations');
 
 async function run() {
