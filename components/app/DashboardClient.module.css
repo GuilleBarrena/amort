@@ -111,6 +111,20 @@
 .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: var(--surface2); border: 1px solid var(--border2); color: var(--text); font-size: 0.7rem; letter-spacing: 0.08em; padding: 0.7rem 1.3rem; border-radius: 2px; z-index: 999; white-space: nowrap; animation: fadeIn 0.2s ease; }
 @keyframes fadeIn { from { opacity: 0; transform: translateX(-50%) translateY(8px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
 
+/* CLOSE VIEW */
+.closeOptions { display: flex; flex-direction: column; gap: 0.8rem; }
+.mutedLetter { color: var(--muted) !important; }
+.closeBtnHeader { font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--red); background: none; border: 1px solid rgba(232,90,74,0.3); border-radius: 2px; padding: 0.35rem 0.7rem; cursor: pointer; transition: color 0.2s, border-color 0.2s; }
+.closeBtnHeader:hover { border-color: var(--red); }
+
+/* HISTORIAL */
+.sectionLabel { font-size: 0.5rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); padding: 1rem 0 0.6rem; border-top: 1px solid var(--border); margin-top: 0.4rem; }
+.cardClosed { opacity: 0.65; cursor: default; }
+.cardClosed:hover { background: var(--surface); }
+.badgeSold { background: rgba(74,170,110,0.12); color: var(--green); }
+.badgeCancelled { background: rgba(232,90,74,0.12); color: var(--red); }
+.barClosed { background: var(--muted); }
+
 @media (max-width: 480px) {
   .twoCol { grid-template-columns: 1fr; }
   .iconPicker { grid-template-columns: repeat(6, 1fr); }
