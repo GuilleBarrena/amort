@@ -6,19 +6,11 @@ const path = require('path');
 
 const MIGRATIONS_DIR = path.join(__dirname, '..', 'supabase', 'migrations');
 
-function getConnectionString() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const password = process.env.SUPABASE_DB_PASSWORD;
-
-  if (!supabaseUrl) throw new Error('NEXT_PUBLIC_SUPABASE_URL is not set');
-  if (!password) throw new Error('SUPABASE_DB_PASSWORD is not set');
-
-  const projectRef = new URL(supabaseUrl).hostname.split('.')[0];
-  return `postgresql://postgres:${encodeURIComponent(password)}@db.${projectRef}.supabase.co:5432/postgres`;
-}
-
 async function run() {
-  const client = new Client({ connectionString: getConnectionString() });
+  const connectionString = process.env.DATABASE_URL;
+  if (!connectionString) throw new Error('DATABASE_URL is not set');
+
+  const client = new Client({ connectionString });
   await client.connect();
 
   try {
