@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "migrate": "node scripts/migrate.js",
+    "deploy": "npm run migrate && npm run build"
   },
   "dependencies": {
     "@supabase/ssr": "^0.4.0",
@@ -19,6 +21,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "pg": "^8.13.3",
     "typescript": "^5"
   }
 }

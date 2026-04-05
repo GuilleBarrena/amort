@@ -1,22 +1,17 @@
-export interface AmortItem {
+export interface Entry {
   id: string
   user_id: string
+  type: 'amort' | 'sub'
   name: string
   price: number
-  monthly: number
-  date_str: string
-  created_at: string
-}
-
-export interface SubItem {
-  id: string
-  user_id: string
-  name: string
-  icon: string
-  price: number
-  period: 'monthly' | 'yearly'
-  category: string
-  since: string
+  // amort
+  monthly?: number
+  date_str?: string
+  // sub
+  icon?: string
+  period?: 'monthly' | 'yearly'
+  category?: string
+  since?: string
   created_at: string
 }
 
