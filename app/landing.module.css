@@ -30,6 +30,14 @@
 
 .navLinks { display: flex; align-items: center; gap: 1.5rem; }
 
+.githubLink {
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+}
+.githubLink:hover { color: var(--text); }
+
 .navLink {
   font-size: 0.75rem;
   letter-spacing: 0.1em;
