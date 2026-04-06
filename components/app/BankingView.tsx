@@ -192,7 +192,7 @@ function buildImportRows(
 
 // ── Component ────────────────────────────────────────────────────────────────
 
-type Screen = 'list' | 'import'
+type Screen = 'list' | 'import' | 'manual'
 
 export function BankingView({ onBack, showToast }: Props) {
   const [screen, setScreen]               = useState<Screen>('list')
@@ -205,6 +205,14 @@ export function BankingView({ onBack, showToast }: Props) {
   const [mapping, setMapping]             = useState<ColumnMapping | null>(null)
   const [filename, setFilename]           = useState('')
   const [importing, setImporting]         = useState(false)
+
+  // Manual entry state
+  const [mDesc, setMDesc]                 = useState('')
+  const [mAmount, setMAmount]             = useState('')
+  const [mDate, setMDate]                 = useState(new Date().toISOString().split('T')[0])
+  const [mCategory, setMCategory]         = useState('')
+  const [mIsExpense, setMIsExpense]       = useState(true)
+  const [mSaving, setMSaving]             = useState(false)
 
   const fetchTransactions = useCallback(async () => {
     setLoadingTxs(true)
@@ -261,6 +269,31 @@ export function BankingView({ onBack, showToast }: Props) {
     })
     const updated = await res.json()
     setTransactions(prev => prev.map(t => t.id === id ? updated : t))
+  }
+
+  async function saveManual() {
+    if (!mDesc.trim() || !mAmount || !mDate) { showToast('Rellena todos los campos'); return }
+    const amount = parseFloat(mAmount.replace(',', '.'))
+    if (isNaN(amount)) { showToast('Importe inválido'); return }
+    setMSaving(true)
+    const row = {
+      date: mDate,
+      amount: mIsExpense ? -Math.abs(amount) : Math.abs(amount),
+      description: mDesc.trim(),
+      category: mCategory || null,
+      import_source: 'manual',
+    }
+    await fetch('/api/banking/import', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ rows: [row] }),
+    })
+    await fetchTransactions()
+    setMDesc(''); setMAmount(''); setMCategory(''); setMIsExpense(true)
+    setMDate(new Date().toISOString().split('T')[0])
+    setMSaving(false)
+    setScreen('list')
+    showToast('Gasto añadido')
   }
 
   // ── Import screen ──
@@ -343,6 +376,88 @@ export function BankingView({ onBack, showToast }: Props) {
     )
   }
 
+  // ── Manual entry screen ──
+  if (screen === 'manual') {
+    return (
+      <div>
+        <div className={styles.detailHeader}>
+          <button className={styles.back} onClick={() => setScreen('list')}>←</button>
+          <div className={styles.detailTitle}>Añadir gasto</div>
+        </div>
+
+        <div className={styles.form}>
+          {/* Expense / Income toggle */}
+          <div className={styles.typeToggle}>
+            <button
+              className={`${styles.typeBtn} ${mIsExpense ? styles.typeBtnDanger : ''}`}
+              onClick={() => setMIsExpense(true)}
+            >
+              − Gasto
+            </button>
+            <button
+              className={`${styles.typeBtn} ${!mIsExpense ? styles.typeBtnGreen : ''}`}
+              onClick={() => setMIsExpense(false)}
+            >
+              + Ingreso
+            </button>
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.label}>Descripción</label>
+            <input
+              className={styles.input}
+              value={mDesc}
+              onChange={e => setMDesc(e.target.value)}
+              placeholder="Mercadona, gasolina…"
+            />
+          </div>
+
+          <div className={styles.twoCol}>
+            <div className={styles.field}>
+              <label className={styles.label}>Importe (€)</label>
+              <input
+                className={styles.input}
+                type="number"
+                min="0"
+                step="0.01"
+                value={mAmount}
+                onChange={e => setMAmount(e.target.value)}
+                placeholder="24.50"
+              />
+            </div>
+            <div className={styles.field}>
+              <label className={styles.label}>Fecha</label>
+              <input
+                className={styles.input}
+                type="date"
+                value={mDate}
+                onChange={e => setMDate(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.label}>Categoría</label>
+            <select
+              className={styles.input}
+              value={mCategory}
+              onChange={e => setMCategory(e.target.value)}
+            >
+              <option value="">Sin categoría</option>
+              {Object.entries(TX_CATEGORIES).map(([k, v]) => (
+                <option key={k} value={k}>{v}</option>
+              ))}
+            </select>
+          </div>
+
+          <button className={styles.btn} onClick={saveManual} disabled={mSaving}>
+            {mSaving ? 'Guardando…' : 'Guardar gasto'}
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   // ── List screen ──
 
   // Group transactions by month
@@ -359,9 +474,8 @@ export function BankingView({ onBack, showToast }: Props) {
       <div className={styles.detailHeader}>
         <button className={styles.back} onClick={onBack}>←</button>
         <div className={styles.detailTitle}>Movimientos</div>
-        <button className={styles.editBtn} onClick={() => fileRef.current?.click()}>
-          + Importar CSV
-        </button>
+        <button className={styles.editBtn} onClick={() => setScreen('manual')}>+ Manual</button>
+        <button className={styles.editBtn} onClick={() => fileRef.current?.click()}>+ CSV</button>
         <input
           ref={fileRef}
           type="file"
@@ -372,18 +486,20 @@ export function BankingView({ onBack, showToast }: Props) {
       </div>
 
       {!loadingTxs && transactions.length === 0 && (
-        <div className={styles.empty}>
-          <div className={styles.emptyIcon}>🏦</div>
-          <div className={styles.emptyText}>
-            Sin movimientos<br />
-            Exporta el CSV de tu banco e impórtalo aquí
-          </div>
-          <button
-            className={styles.btn}
-            style={{ marginTop: '1.5rem' }}
-            onClick={() => fileRef.current?.click()}
-          >
-            Seleccionar archivo
+        <div className={styles.emptyOptions}>
+          <button className={styles.emptyOption} onClick={() => fileRef.current?.click()}>
+            <span className={styles.emptyOptionIcon}>📂</span>
+            <span className={styles.emptyOptionTitle}>Importar desde CSV</span>
+            <span className={styles.emptyOptionDesc}>
+              Exporta el historial de tu banco y súbelo aquí. Amort detecta las columnas automáticamente y elimina duplicados.
+            </span>
+          </button>
+          <button className={styles.emptyOption} onClick={() => setScreen('manual')}>
+            <span className={styles.emptyOptionIcon}>✏️</span>
+            <span className={styles.emptyOptionTitle}>Añadir gasto manual</span>
+            <span className={styles.emptyOptionDesc}>
+              Introduce un gasto o ingreso a mano con descripción, importe, fecha y categoría.
+            </span>
           </button>
         </div>
       )}

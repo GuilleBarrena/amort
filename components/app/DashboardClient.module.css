@@ -115,6 +115,35 @@
 .bankingBtn { padding: 0.5rem 0.85rem; background: none; border: 1px solid var(--border); border-radius: 2px; font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); cursor: pointer; transition: all 0.15s; white-space: nowrap; }
 .bankingBtn:hover { color: var(--text); border-color: var(--border2); }
 
+/* Empty state — two big options */
+.emptyOptions { display: flex; flex-direction: column; gap: 0.8rem; margin-top: 2rem; }
+
+.emptyOption {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 1.8rem 1.6rem;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s, border-color 0.15s;
+}
+.emptyOption:hover { background: var(--surface2); border-color: var(--border2); }
+.emptyOption:first-child { border-left: 3px solid var(--gold); }
+.emptyOption:last-child  { border-left: 3px solid var(--purple); }
+
+.emptyOptionIcon  { font-size: 1.8rem; margin-bottom: 0.2rem; }
+.emptyOptionTitle { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; color: var(--text); }
+.emptyOptionDesc  { font-size: 0.72rem; color: var(--muted); line-height: 1.6; }
+
+/* Form type toggle variants */
+.typeBtnDanger { background: rgba(232,90,74,0.15) !important; color: var(--red) !important; }
+.typeBtnGreen  { background: rgba(74,170,110,0.15) !important; color: var(--green) !important; }
+
 /* Import screen */
 .importMeta { display: flex; align-items: center; justify-content: space-between; background: var(--surface); border: 1px solid var(--border); border-radius: 2px; padding: 0.65rem 1rem; margin-bottom: 1rem; }
 .importFilename { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
