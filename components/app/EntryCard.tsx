@@ -1,3 +1,4 @@
+import * as Progress from '@radix-ui/react-progress'
 import type { Entry } from '@/lib/types'
 import { calcAmort, monthlyFromSub, fmt, fmtDate } from '@/lib/calc'
 import styles from './DashboardClient.module.css'
@@ -10,7 +11,6 @@ interface Props {
 }
 
 export function EntryCard({ entry, onClick }: Props) {
-  // Historial (closed) card
   if (entry.closed_at) {
     const isSold = entry.close_type === 'sold'
     return (
@@ -37,12 +37,13 @@ export function EntryCard({ entry, onClick }: Props) {
           }
           <div><div className={styles.statLabel}>Cerrado</div><div className={styles.statVal}>{fmtDate(new Date(entry.closed_at))}</div></div>
         </div>
-        <div className={styles.bar}><div className={`${styles.barFill} ${styles.barClosed}`} style={{ width: '100%' }} /></div>
+        <Progress.Root className={styles.bar} value={100} max={100}>
+          <Progress.Indicator className={`${styles.barFill} ${styles.barClosed}`} style={{ width: '100%' }} />
+        </Progress.Root>
       </div>
     )
   }
 
-  // Amort card
   if (entry.type === 'amort') {
     const c = calcAmort(entry)
     const pct = Math.min(c.pct, 100)
@@ -65,14 +66,16 @@ export function EntryCard({ entry, onClick }: Props) {
           <div><div className={styles.statLabel}>/ mes</div><div className={styles.statVal}>{fmt(entry.monthly!)}</div></div>
           <div><div className={styles.statLabel}>Venta virtual</div><div className={styles.statVal}>{fmt(c.virtualPrice)}</div></div>
         </div>
-        <div className={styles.bar}>
-          <div className={`${styles.barFill} ${c.alreadyDone ? styles.barDone : ''}`} style={{ width: `${pct}%` }} />
-        </div>
+        <Progress.Root className={styles.bar} value={pct} max={100}>
+          <Progress.Indicator
+            className={`${styles.barFill} ${c.alreadyDone ? styles.barDone : ''}`}
+            style={{ width: `${pct}%` }}
+          />
+        </Progress.Root>
       </div>
     )
   }
 
-  // Sub card
   const monthly = monthlyFromSub(entry)
   const today = new Date(); today.setHours(0, 0, 0, 0)
   const since = entry.since ? new Date(entry.since + 'T00:00:00') : null
@@ -88,7 +91,9 @@ export function EntryCard({ entry, onClick }: Props) {
         <div><div className={styles.statLabel}>/ año</div><div className={styles.statVal}>{fmt(monthly * 12)}</div></div>
         <div><div className={styles.statLabel}>{mo !== null ? 'Meses activa' : 'Categoría'}</div><div className={styles.statVal}>{mo !== null ? mo + ' m' : CAT_LABELS[entry.category!]}</div></div>
       </div>
-      <div className={styles.bar}><div className={`${styles.barFill} ${styles.barSub}`} style={{ width: '100%' }} /></div>
+      <Progress.Root className={styles.bar} value={100} max={100}>
+        <Progress.Indicator className={`${styles.barFill} ${styles.barSub}`} style={{ width: '100%' }} />
+      </Progress.Root>
     </div>
   )
 }

@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import * as Label from '@radix-ui/react-label'
 import { createClient } from '@/lib/supabase-browser'
 import styles from '../auth.module.css'
 
@@ -31,12 +32,12 @@ export default function LoginPage() {
       <form className={styles.form} onSubmit={handleSubmit}>
         {error && <div className={styles.error}>{error}</div>}
         <div className={styles.field}>
-          <label className={styles.label}>Email</label>
-          <input className={styles.input} type="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="tu@email.com" />
+          <Label.Root htmlFor="login-email" className={styles.label}>Email</Label.Root>
+          <input id="login-email" className={styles.input} type="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="tu@email.com" />
         </div>
         <div className={styles.field}>
-          <label className={styles.label}>Contraseña</label>
-          <input className={styles.input} type="password" required value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" />
+          <Label.Root htmlFor="login-password" className={styles.label}>Contraseña</Label.Root>
+          <input id="login-password" className={styles.input} type="password" required value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" />
         </div>
         <button className={styles.btn} type="submit" disabled={loading}>
           {loading ? 'Entrando…' : 'Entrar'}
