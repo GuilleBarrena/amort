@@ -288,9 +288,21 @@ export default function DashboardClient({ initialEntries, totalMonthly: initTota
       </div>
 
       {(active.length + sortedSubs.length + done.length) === 0 ? (
-        <div className={styles.empty}>
-          <div className={styles.emptyIcon}>◻</div>
-          <div className={styles.emptyText}>Nada aquí todavía<br />Pulsa &quot;+ Nuevo&quot; para empezar</div>
+        <div className={styles.emptyOptions}>
+          <button className={styles.emptyOption} onClick={() => setView('banking')}>
+            <span className={styles.emptyOptionIcon}>📂</span>
+            <span className={styles.emptyOptionTitle}>Importar desde CSV</span>
+            <span className={styles.emptyOptionDesc}>
+              Exporta el historial de tu banco y súbelo aquí. Amort detecta las columnas automáticamente y elimina duplicados.
+            </span>
+          </button>
+          <button className={styles.emptyOption} onClick={() => goAdd()}>
+            <span className={styles.emptyOptionIcon}>✏️</span>
+            <span className={styles.emptyOptionTitle}>Añadir entrada manual</span>
+            <span className={styles.emptyOptionDesc}>
+              Añade una compra o suscripción a mano para empezar a controlar tus gastos.
+            </span>
+          </button>
         </div>
       ) : (
         <>

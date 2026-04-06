@@ -499,13 +499,6 @@ export function BankingView({ onBack, showToast }: Props) {
               Exporta el historial de tu banco y súbelo aquí. Amort detecta las columnas automáticamente y elimina duplicados.
             </span>
           </button>
-          <button className={styles.emptyOption} onClick={() => setScreen('manual')}>
-            <span className={styles.emptyOptionIcon}>✏️</span>
-            <span className={styles.emptyOptionTitle}>Añadir gasto manual</span>
-            <span className={styles.emptyOptionDesc}>
-              Introduce un gasto o ingreso a mano con descripción, importe, fecha y categoría.
-            </span>
-          </button>
         </div>
       )}
 
