@@ -111,6 +111,38 @@
 .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: var(--surface2); border: 1px solid var(--border2); color: var(--text); font-size: 0.7rem; letter-spacing: 0.08em; padding: 0.7rem 1.3rem; border-radius: 2px; z-index: 999; white-space: nowrap; animation: fadeIn 0.2s ease; }
 @keyframes fadeIn { from { opacity: 0; transform: translateX(-50%) translateY(8px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
 
+/* BANKING */
+.bankingBtn { padding: 0.5rem 0.85rem; background: none; border: 1px solid var(--border); border-radius: 2px; font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+.bankingBtn:hover { color: var(--text); border-color: var(--border2); }
+
+.bankingNotice { background: rgba(232,201,74,0.06); border: 1px solid rgba(232,201,74,0.25); border-radius: 2px; padding: 0.7rem 1rem; font-size: 0.62rem; color: var(--gold); margin-bottom: 1rem; letter-spacing: 0.05em; }
+
+.connectionCard { display: flex; align-items: center; justify-content: space-between; background: var(--surface); border: 1px solid var(--border); border-left: 3px solid #3a9de8; border-radius: 2px; padding: 0.75rem 1rem; margin-bottom: 0.6rem; gap: 0.5rem; }
+.connectionInfo { display: flex; flex-direction: column; gap: 0.2rem; flex: 1; min-width: 0; }
+.connectionName { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.85rem; color: var(--text); }
+.connectionMeta { font-size: 0.52rem; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
+.connectionActions { display: flex; gap: 0.4rem; flex-shrink: 0; }
+
+.institutionList { display: flex; flex-direction: column; gap: 0.4rem; max-height: 60vh; overflow-y: auto; }
+.institutionRow { display: flex; align-items: center; gap: 0.75rem; background: var(--surface); border: 1px solid var(--border); border-radius: 2px; padding: 0.75rem 1rem; cursor: pointer; transition: background 0.15s; text-align: left; }
+.institutionRow:hover { background: var(--surface2); }
+.institutionRow:disabled { opacity: 0.5; cursor: not-allowed; }
+.institutionLogo { width: 24px; height: 24px; object-fit: contain; flex-shrink: 0; border-radius: 2px; }
+.institutionLogoPlaceholder { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+.institutionName { font-family: 'Syne', sans-serif; font-size: 0.85rem; color: var(--text); flex: 1; }
+.institutionArrow { color: var(--muted); font-size: 0.8rem; }
+
+.txRow { background: var(--surface); border: 1px solid var(--border); border-radius: 2px; padding: 0.7rem 1rem; margin-bottom: 0.4rem; }
+.txMain { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; margin-bottom: 0.4rem; }
+.txDescription { font-size: 0.82rem; color: var(--text); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.txAmount { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; font-weight: 600; flex-shrink: 0; }
+.txMeta { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.txDate { font-size: 0.52rem; color: var(--muted); letter-spacing: 0.08em; flex-shrink: 0; }
+.txCategorySelect { background: var(--surface); border: 1px solid var(--border); border-radius: 2px; font-family: 'JetBrains Mono', monospace; font-size: 0.52rem; color: var(--muted); padding: 0.2rem 0.4rem; cursor: pointer; outline: none; -webkit-appearance: none; }
+.txCategorySelect:focus { border-color: var(--gold); color: var(--text); }
+
+.sectionLabel { font-size: 0.5rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); padding: 1rem 0 0.6rem; border-top: 1px solid var(--border); margin-top: 0.4rem; }
+
 @media (max-width: 480px) {
   .twoCol { grid-template-columns: 1fr; }
   .iconPicker { grid-template-columns: repeat(6, 1fr); }

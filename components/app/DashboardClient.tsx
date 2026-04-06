@@ -2,13 +2,14 @@
 import { useState, useCallback } from 'react'
 import type { Entry } from '@/lib/types'
 import { calcAmort, monthlyFromSub, fmt, fmtDate } from '@/lib/calc'
+import { BankingView } from './BankingView'
 import styles from './DashboardClient.module.css'
 
 const ICONS = ['📱','💻','🖥️','📷','🎮','🎧','📺','🎵','🏋️','📚','☁️','🔒','✉️','🏠','🚗','🌍','💊','🎨','📡','⚡','🍿','🎬','🛡️','🔧']
 const CAT_LABELS: Record<string, string> = { entretenimiento:'Entretenimiento', telefonia:'Telefonía', musica:'Música', software:'Software', nube:'Nube', salud:'Salud', educacion:'Educación', otros:'Otros' }
 
 type Filter = 'all' | 'amort' | 'sub'
-type View = 'list' | 'add' | 'detail'
+type View = 'list' | 'add' | 'detail' | 'banking'
 
 interface Props {
   initialEntries: Entry[]
@@ -110,7 +111,17 @@ export default function DashboardClient({ initialEntries, totalMonthly: initTota
   const sortedSubs = subList.slice().sort((a, b) => monthlyFromSub(b) - monthlyFromSub(a))
   const done      = amortList.filter(e => e.calc.alreadyDone)
 
-  // ── RENDER ──
+  // ── BANKING VIEW ──
+  if (view === 'banking') {
+    return (
+      <>
+        <BankingView onBack={() => setView('list')} showToast={showToast} />
+        {toast && <div className={styles.toast}>{toast}</div>}
+      </>
+    )
+  }
+
+  // ── DETAIL VIEW ──
   if (view === 'detail' && selected) {
     if (selected.type === 'amort') {
       const c = calcAmort(selected)
@@ -154,6 +165,7 @@ export default function DashboardClient({ initialEntries, totalMonthly: initTota
               <div className={styles.resultNote}>{c.virtualPrice === 0 ? 'Completamente amortizado.' : `${fmt(selected.price)} − ${fmt(c.amortized)} amortizados.`}</div>
             </div>
           </div>
+          {toast && <div className={styles.toast}>{toast}</div>}
         </div>
       )
     }
@@ -185,10 +197,12 @@ export default function DashboardClient({ initialEntries, totalMonthly: initTota
           <div className={styles.metaCell}><div className={styles.metaLabel}>Desde</div><div className={styles.metaVal}>{since ? fmtDate(since) : '—'}</div></div>
         </div>
         <button className={`${styles.btn} ${styles.btnDanger}`} onClick={deleteEntry} disabled={loading}>Eliminar suscripción</button>
+        {toast && <div className={styles.toast}>{toast}</div>}
       </div>
     )
   }
 
+  // ── ADD / EDIT VIEW ──
   if (view === 'add') {
     const isAmort = formType === 'amort'
     const isEditing = !!selected
@@ -242,11 +256,12 @@ export default function DashboardClient({ initialEntries, totalMonthly: initTota
             {isEditing && <button className={`${styles.btn} ${styles.btnDanger}`} onClick={deleteEntry} disabled={loading}>Eliminar</button>}
           </div>
         )}
+        {toast && <div className={styles.toast}>{toast}</div>}
       </div>
     )
   }
 
-  // LIST VIEW
+  // ── LIST VIEW ──
   return (
     <div>
       <div className={styles.summary}>
@@ -268,13 +283,14 @@ export default function DashboardClient({ initialEntries, totalMonthly: initTota
             </button>
           ))}
         </div>
+        <button className={styles.bankingBtn} onClick={() => setView('banking')}>🏦 Banca</button>
         <button className={styles.addBtn} onClick={() => goAdd()}>+ Nuevo</button>
       </div>
 
       {(active.length + sortedSubs.length + done.length) === 0 ? (
         <div className={styles.empty}>
           <div className={styles.emptyIcon}>◻</div>
-          <div className={styles.emptyText}>Nada aquí todavía<br />Pulsa "+ Nuevo" para empezar</div>
+          <div className={styles.emptyText}>Nada aquí todavía<br />Pulsa &quot;+ Nuevo&quot; para empezar</div>
         </div>
       ) : (
         <>

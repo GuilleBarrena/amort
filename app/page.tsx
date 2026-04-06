@@ -59,6 +59,13 @@ export default function LandingPage() {
             Un solo número: lo que te cuesta todo lo que tienes cada mes. Compras en amortización más suscripciones activas.
           </div>
         </div>
+        <div className={styles.feature}>
+          <div className={styles.featureIcon}>🏦</div>
+          <div className={styles.featureTitle}>Banca conectada</div>
+          <div className={styles.featureText}>
+            Conecta tu banco vía Open Banking (PSD2) e importa tus movimientos automáticamente. Categorízalos a mano y lleva el control real de lo que gastas.
+          </div>
+        </div>
       </section>
 
       {/* BOTTOM CTA */}
