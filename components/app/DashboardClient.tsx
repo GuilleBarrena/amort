@@ -118,9 +118,16 @@ export default function DashboardClient({ initialEntries }: Props) {
   }
 
   if (view === 'detail' && selected) {
+    const sharedProps = {
+      entry: selected,
+      onBack: () => setView('list'),
+      onEdit: () => openEdit(selected),
+      onClose: () => openClose(selected),
+      onDelete: deleteEntry,
+    }
     return selected.type === 'amort'
-      ? <AmortDetail entry={selected} onBack={() => setView('list')} onEdit={() => openEdit(selected)} onClose={() => openClose(selected)} />
-      : <SubDetail entry={selected} onBack={() => setView('list')} onEdit={() => openEdit(selected)} onClose={() => openClose(selected)} />
+      ? <AmortDetail {...sharedProps} />
+      : <SubDetail {...sharedProps} />
   }
 
   if (view === 'add') {

@@ -117,6 +117,18 @@
 .closeBtnHeader { font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--red); background: none; border: 1px solid rgba(232,90,74,0.3); border-radius: 2px; padding: 0.35rem 0.7rem; cursor: pointer; transition: color 0.2s, border-color 0.2s; }
 .closeBtnHeader:hover { border-color: var(--red); }
 
+/* KEBAB MENU */
+.kebab { position: relative; }
+.kebabBtn { background: none; border: 1px solid var(--border); border-radius: 2px; color: var(--muted); font-size: 1.1rem; line-height: 1; padding: 0.2rem 0.55rem; cursor: pointer; transition: color 0.15s, border-color 0.15s; }
+.kebabBtn:hover { color: var(--text); border-color: var(--border2); }
+.kebabMenu { position: absolute; right: 0; top: calc(100% + 0.4rem); background: var(--surface2); border: 1px solid var(--border2); border-radius: 2px; z-index: 100; min-width: 190px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.45); }
+.kebabItem { display: flex; flex-direction: column; align-items: flex-start; gap: 0.2rem; width: 100%; background: none; border: none; border-bottom: 1px solid var(--border); padding: 0.75rem 1rem; cursor: pointer; text-align: left; transition: background 0.15s; }
+.kebabItem:last-child { border-bottom: none; }
+.kebabItem:hover { background: rgba(255,255,255,0.04); }
+.kebabItemLabel { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text); }
+.kebabItemDesc { font-size: 0.52rem; letter-spacing: 0.05em; color: var(--muted); line-height: 1.4; }
+.kebabItemDanger .kebabItemLabel { color: var(--red); }
+
 /* HISTORIAL */
 .sectionLabel { font-size: 0.5rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); padding: 1rem 0 0.6rem; border-top: 1px solid var(--border); margin-top: 0.4rem; }
 .cardClosed { opacity: 0.65; cursor: default; }
