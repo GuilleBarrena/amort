@@ -9,10 +9,11 @@ import { AmortDetail } from './AmortDetail'
 import { SubDetail } from './SubDetail'
 import { EntryForm } from './EntryForm'
 import { CloseView } from './CloseView'
+import { BankingView } from './BankingView'
 import styles from './DashboardClient.module.css'
 
 type Filter = 'all' | 'amort' | 'sub'
-type View = 'list' | 'add' | 'detail' | 'close'
+type View = 'list' | 'add' | 'detail' | 'close' | 'banking'
 
 interface Props {
   initialEntries: Entry[]
@@ -42,9 +43,9 @@ export default function DashboardClient({ initialEntries }: Props) {
   const totalPending = amortEntries.reduce((s, e) => s + calcAmort(e).virtualPrice, 0)
 
   function openDetail(entry: Entry) { setSelected(entry); setView('detail') }
-  function openEdit(entry: Entry) { setSelected(entry); setView('add') }
-  function openClose(entry: Entry) { setSelected(entry); setView('close') }
-  function openAdd() { setSelected(null); setView('add') }
+  function openEdit(entry: Entry)   { setSelected(entry); setView('add') }
+  function openClose(entry: Entry)  { setSelected(entry); setView('close') }
+  function openAdd()                { setSelected(null);  setView('add') }
 
   async function saveEntry(body: object) {
     setLoading(true)
@@ -91,12 +92,16 @@ export default function DashboardClient({ initialEntries }: Props) {
   }
 
   const amortList = (filter !== 'sub') ? amortEntries.map(e => ({ entry: e, calc: calcAmort(e) })) : []
-  const subList = (filter !== 'amort') ? subEntries.slice().sort((a, b) => monthlyFromSub(b) - monthlyFromSub(a)) : []
-  const active = amortList.filter(e => !e.calc.alreadyDone).sort((a, b) => b.entry.monthly! - a.entry.monthly!)
-  const done = amortList.filter(e => e.calc.alreadyDone)
+  const subList   = (filter !== 'amort') ? subEntries.slice().sort((a, b) => monthlyFromSub(b) - monthlyFromSub(a)) : []
+  const active    = amortList.filter(e => !e.calc.alreadyDone).sort((a, b) => b.entry.monthly! - a.entry.monthly!)
+  const done      = amortList.filter(e => e.calc.alreadyDone)
   const historial = closedEntries.filter(e => filter === 'all' || e.type === filter)
 
   function renderView() {
+    if (view === 'banking') {
+      return <BankingView onBack={() => setView('list')} showToast={showToast} />
+    }
+
     if (view === 'close' && selected) {
       return (
         <CloseView
@@ -136,6 +141,7 @@ export default function DashboardClient({ initialEntries }: Props) {
       )
     }
 
+    // LIST VIEW
     return (
       <div>
         <div className={styles.summary}>
@@ -166,13 +172,26 @@ export default function DashboardClient({ initialEntries }: Props) {
               </ToggleGroup.Item>
             ))}
           </ToggleGroup.Root>
+          <button className={styles.bankingBtn} onClick={() => setView('banking')}>🏦 Banca</button>
           <button className={styles.addBtn} onClick={openAdd}>+ Nuevo</button>
         </div>
 
         {(active.length + subList.length + done.length + historial.length) === 0 ? (
-          <div className={styles.empty}>
-            <div className={styles.emptyIcon}>◻</div>
-            <div className={styles.emptyText}>Nada aquí todavía<br />Pulsa &quot;+ Nuevo&quot; para empezar</div>
+          <div className={styles.emptyOptions}>
+            <button className={styles.emptyOption} onClick={() => setView('banking')}>
+              <span className={styles.emptyOptionIcon}>📂</span>
+              <span className={styles.emptyOptionTitle}>Importar desde CSV</span>
+              <span className={styles.emptyOptionDesc}>
+                Exporta el historial de tu banco y súbelo aquí. Amort detecta las columnas automáticamente y elimina duplicados.
+              </span>
+            </button>
+            <button className={styles.emptyOption} onClick={openAdd}>
+              <span className={styles.emptyOptionIcon}>✏️</span>
+              <span className={styles.emptyOptionTitle}>Añadir entrada manual</span>
+              <span className={styles.emptyOptionDesc}>
+                Añade una compra o suscripción a mano para empezar a controlar tus gastos.
+              </span>
+            </button>
           </div>
         ) : (
           <>

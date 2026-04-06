@@ -2,10 +2,11 @@
 
 > Know what everything you own *actually* costs you per month.
 
-Amort is a minimalist open-source personal finance tool that does two things:
+Amort is a minimalist open-source personal finance tool that does three things:
 
 - **Amortization tracker** — set a monthly target for big purchases (laptop, camera, bike) and watch them pay themselves off over time. Know their real sale price today.
 - **Subscription manager** — see every recurring charge in one place and your true monthly total across all of them.
+- **CSV import** — export transactions from your bank and import them in seconds. Auto-detects columns (date, amount, description), deduplicates rows, and lets you categorise each transaction manually.
 
 ---
 
@@ -68,12 +69,15 @@ Migrations run automatically on every deploy and are idempotent — already-appl
 ```
 app/
   api/entries/       # Unified REST API (amort + sub)
+  api/banking/import # CSV import endpoint (deduplication, batch insert)
+  api/transactions/  # Transaction list + category update
   auth/              # Login & register pages
   dashboard/         # Main app (server component + data fetching)
 components/app/
   DashboardClient    # All interactive UI & state
+  BankingView        # CSV import UI + transaction list with category select
 lib/
-  types.ts           # Entry type (unified amort/sub)
+  types.ts           # Entry, Transaction types
   calc.ts            # Amortization math & formatting
 scripts/
   migrate.js         # Migration runner (used at deploy time)
