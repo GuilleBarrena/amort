@@ -13,6 +13,12 @@ export interface Entry {
   category?: string
   since?: string
   created_at: string
+  // close / delete
+  deleted_at?: string
+  closed_at?: string
+  close_type?: 'sold' | 'cancelled'
+  sale_price?: number
+  total_expenses?: number
 }
 
 export interface AmortCalc {
