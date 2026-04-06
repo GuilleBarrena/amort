@@ -8,6 +8,7 @@ interface ImportRow {
   currency?: string
   external_id?: string
   import_source?: string
+  category?: string | null
 }
 
 export async function POST(req: Request) {
@@ -20,32 +21,42 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Sin filas' }, { status: 400 })
 
   const records = rows.map(r => ({
-    user_id: user.id,
-    external_id: r.external_id ?? null,
+    user_id:       user.id,
+    external_id:   r.external_id   ?? null,
     import_source: r.import_source ?? null,
-    amount: r.amount,
-    currency: r.currency ?? 'EUR',
-    description: r.description,
-    date: r.date,
+    amount:        r.amount,
+    currency:      r.currency      ?? 'EUR',
+    description:   r.description,
+    date:          r.date,
+    category:      r.category      ?? null,
   }))
 
-  // Split into rows with and without external_id for proper upsert handling
+  // CSV rows always have external_id; manual entries do not
   const withId    = records.filter(r => r.external_id)
   const withoutId = records.filter(r => !r.external_id)
 
+  let imported = 0
+
   if (withId.length) {
-    const { error } = await supabase
+    // ignoreDuplicates: true → conflict on (user_id, external_id) is silently discarded.
+    // .select() returns only the rows that were actually inserted (not skipped).
+    const { data, error } = await supabase
       .from('transactions')
       .upsert(withId, { onConflict: 'user_id,external_id', ignoreDuplicates: true })
+      .select('id')
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    imported += data?.length ?? 0
   }
 
   if (withoutId.length) {
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from('transactions')
       .insert(withoutId)
+      .select('id')
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    imported += data?.length ?? 0
   }
 
-  return NextResponse.json({ imported: records.length })
+  const skipped = records.length - imported
+  return NextResponse.json({ imported, skipped })
 }

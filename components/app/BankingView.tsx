@@ -258,7 +258,10 @@ export function BankingView({ onBack, showToast }: Props) {
     setImporting(false)
     setParsed(null)
     setScreen('list')
-    showToast(`${data.imported ?? rows.length} movimientos importados`)
+    const msg = data.skipped > 0
+      ? `${data.imported} importados · ${data.skipped} duplicados omitidos`
+      : `${data.imported} movimientos importados`
+    showToast(msg)
   }
 
   async function updateCategory(id: string, category: string | null) {
