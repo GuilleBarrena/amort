@@ -477,8 +477,10 @@ export function BankingView({ onBack, showToast }: Props) {
       <div className={styles.detailHeader}>
         <button className={styles.back} onClick={onBack}>←</button>
         <div className={styles.detailTitle}>Movimientos</div>
-        <button className={styles.editBtn} onClick={() => setScreen('manual')}>+ Manual</button>
-        <button className={styles.editBtn} onClick={() => fileRef.current?.click()}>+ CSV</button>
+        {transactions.length > 0 && <>
+          <button className={styles.editBtn} onClick={() => setScreen('manual')}>+ Manual</button>
+          <button className={styles.editBtn} onClick={() => fileRef.current?.click()}>+ CSV</button>
+        </>}
         <input
           ref={fileRef}
           type="file"
