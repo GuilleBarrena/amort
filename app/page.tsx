@@ -63,7 +63,7 @@ export default function LandingPage() {
           <div className={styles.featureIcon}>🏦</div>
           <div className={styles.featureTitle}>Banca conectada</div>
           <div className={styles.featureText}>
-            Conecta tu banco vía Open Banking (PSD2) e importa tus movimientos automáticamente. Categorízalos a mano y lleva el control real de lo que gastas.
+            Exporta el CSV de tu banco e impórtalo en segundos. Amort detecta las columnas automáticamente, elimina duplicados y te deja categorizar cada movimiento a mano.
           </div>
         </div>
       </section>

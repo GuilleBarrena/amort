@@ -24,24 +24,11 @@ export interface AmortCalc {
   alreadyDone: boolean
 }
 
-export interface BankConnection {
-  id: string
-  user_id: string
-  requisition_id: string
-  institution_id: string
-  institution_name: string
-  status: 'pending' | 'linked' | 'expired'
-  account_ids: string[]
-  created_at: string
-  last_synced_at: string | null
-}
-
 export interface Transaction {
   id: string
   user_id: string
-  connection_id: string
-  external_id: string
-  account_id: string
+  external_id: string | null
+  import_source: string | null
   amount: number
   currency: string
   description: string
