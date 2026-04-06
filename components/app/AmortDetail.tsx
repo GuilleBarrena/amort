@@ -1,15 +1,17 @@
 import type { Entry } from '@/lib/types'
 import { calcAmort, fmt, fmtDate } from '@/lib/calc'
 import styles from './DashboardClient.module.css'
+import { KebabMenu } from './KebabMenu'
 
 interface Props {
   entry: Entry
   onBack: () => void
   onEdit: () => void
   onClose: () => void
+  onDelete: () => void
 }
 
-export function AmortDetail({ entry, onBack, onEdit, onClose }: Props) {
+export function AmortDetail({ entry, onBack, onEdit, onClose, onDelete }: Props) {
   const c = calcAmort(entry)
   const pct = Math.min(c.pct, 100)
 
@@ -18,8 +20,11 @@ export function AmortDetail({ entry, onBack, onEdit, onClose }: Props) {
       <div className={styles.detailHeader}>
         <button className={styles.back} onClick={onBack}>←</button>
         <div className={styles.detailTitle}>{entry.name}</div>
-        <button className={styles.editBtn} onClick={onEdit}>Editar</button>
-        <button className={styles.closeBtnHeader} onClick={onClose}>Cerrar</button>
+        <KebabMenu items={[
+          { label: 'Editar', description: 'Modificar datos de la compra', onClick: onEdit },
+          { label: 'Cerrar', description: 'Registrar venta o baja con historial', onClick: onClose },
+          { label: 'Eliminar', description: 'Borrar por error, sin guardar historial', onClick: onDelete, danger: true },
+        ]} />
       </div>
       <div className={styles.metaGrid}>
         <div className={styles.metaCell}><div className={styles.metaLabel}>Precio compra</div><div className={styles.metaVal}>{fmt(entry.price)}</div></div>

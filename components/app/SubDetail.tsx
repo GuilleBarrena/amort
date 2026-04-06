@@ -1,6 +1,7 @@
 import type { Entry } from '@/lib/types'
 import { monthlyFromSub, fmt, fmtDate } from '@/lib/calc'
 import styles from './DashboardClient.module.css'
+import { KebabMenu } from './KebabMenu'
 
 const CAT_LABELS: Record<string, string> = { entretenimiento:'Entretenimiento', telefonia:'Telefonía', musica:'Música', software:'Software', nube:'Nube', salud:'Salud', educacion:'Educación', seguros:'Seguros', otros:'Otros' }
 
@@ -9,9 +10,10 @@ interface Props {
   onBack: () => void
   onEdit: () => void
   onClose: () => void
+  onDelete: () => void
 }
 
-export function SubDetail({ entry, onBack, onEdit, onClose }: Props) {
+export function SubDetail({ entry, onBack, onEdit, onClose, onDelete }: Props) {
   const monthly = monthlyFromSub(entry)
   const since = entry.since ? new Date(entry.since + 'T00:00:00') : null
   const today = new Date(); today.setHours(0, 0, 0, 0)
@@ -22,8 +24,11 @@ export function SubDetail({ entry, onBack, onEdit, onClose }: Props) {
       <div className={styles.detailHeader}>
         <button className={styles.back} onClick={onBack}>←</button>
         <div className={styles.detailTitle}>{entry.name}</div>
-        <button className={styles.editBtn} onClick={onEdit}>Editar</button>
-        <button className={styles.closeBtnHeader} onClick={onClose}>Cerrar</button>
+        <KebabMenu items={[
+          { label: 'Editar', description: 'Modificar datos de la suscripción', onClick: onEdit },
+          { label: 'Cerrar', description: 'Registrar cancelación con historial', onClick: onClose },
+          { label: 'Eliminar', description: 'Borrar por error, sin guardar historial', onClick: onDelete, danger: true },
+        ]} />
       </div>
       <div className={styles.subHero}>
         <div className={styles.subHeroIcon}>{entry.icon}</div>
