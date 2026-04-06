@@ -59,9 +59,12 @@ export default function LandingPage() {
             Un solo número: lo que te cuesta todo lo que tienes cada mes. Compras en amortización más suscripciones activas.
           </div>
         </div>
-        <div className={styles.feature}>
+        <div className={`${styles.feature} ${styles.featureWide}`}>
           <div className={styles.featureIcon}>🏦</div>
-          <div className={styles.featureTitle}>Banca conectada</div>
+          <div className={styles.featureTitle}>
+            Importa tus movimientos
+            <span className={styles.featureBadge}>Nuevo</span>
+          </div>
           <div className={styles.featureText}>
             Exporta el CSV de tu banco e impórtalo en segundos. Amort detecta las columnas automáticamente, elimina duplicados y te deja categorizar cada movimiento a mano.
           </div>
