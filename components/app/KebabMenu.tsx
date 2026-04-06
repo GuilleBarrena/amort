@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useRef } from 'react'
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import styles from './DashboardClient.module.css'
 
 interface MenuItem {
@@ -14,40 +14,25 @@ interface Props {
 }
 
 export function KebabMenu({ items }: Props) {
-  const [open, setOpen] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    function handler(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
-    }
-    if (open) document.addEventListener('mousedown', handler)
-    return () => document.removeEventListener('mousedown', handler)
-  }, [open])
-
   return (
-    <div className={styles.kebab} ref={ref}>
-      <button
-        className={styles.kebabBtn}
-        onClick={e => { e.stopPropagation(); setOpen(o => !o) }}
-        aria-label="Más opciones"
-      >
-        &#8942;
-      </button>
-      {open && (
-        <div className={styles.kebabMenu}>
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger asChild>
+        <button className={styles.kebabBtn} aria-label="Más opciones">&#8942;</button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Portal>
+        <DropdownMenu.Content className={styles.kebabMenu} align="end" sideOffset={6}>
           {items.map(item => (
-            <button
+            <DropdownMenu.Item
               key={item.label}
               className={`${styles.kebabItem} ${item.danger ? styles.kebabItemDanger : ''}`}
-              onClick={e => { e.stopPropagation(); setOpen(false); item.onClick() }}
+              onSelect={item.onClick}
             >
               <span className={styles.kebabItemLabel}>{item.label}</span>
               <span className={styles.kebabItemDesc}>{item.description}</span>
-            </button>
+            </DropdownMenu.Item>
           ))}
-        </div>
-      )}
-    </div>
+        </DropdownMenu.Content>
+      </DropdownMenu.Portal>
+    </DropdownMenu.Root>
   )
 }

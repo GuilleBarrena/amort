@@ -1,3 +1,4 @@
+import * as Progress from '@radix-ui/react-progress'
 import type { Entry } from '@/lib/types'
 import { calcAmort, fmt, fmtDate } from '@/lib/calc'
 import styles from './DashboardClient.module.css'
@@ -38,7 +39,12 @@ export function AmortDetail({ entry, onBack, onEdit, onClose, onDelete }: Props)
           <div className={styles.resultLabel}>Amortización hasta hoy</div>
           <div className={styles.resultValue}>{fmt(c.amortized)}</div>
           <div className={styles.resultNote}>{c.months.toFixed(1)} meses · {c.pct.toFixed(1)}% del total</div>
-          <div className={styles.progressBar}><div className={`${styles.progressFill} ${c.alreadyDone ? styles.done : ''}`} style={{ width: `${pct}%` }} /></div>
+          <Progress.Root className={styles.progressBar} value={pct} max={100}>
+            <Progress.Indicator
+              className={`${styles.progressFill} ${c.alreadyDone ? styles.done : ''}`}
+              style={{ width: `${pct}%` }}
+            />
+          </Progress.Root>
           <div className={`${styles.progressPct} ${c.alreadyDone ? styles.done : ''}`}>{c.alreadyDone ? '✓ totalmente amortizado' : `${pct.toFixed(1)}% amortizado`}</div>
         </div>
       </div>
