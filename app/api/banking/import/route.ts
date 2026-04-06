@@ -33,25 +33,19 @@ export async function POST(req: Request) {
   const withId    = records.filter(r => r.external_id)
   const withoutId = records.filter(r => !r.external_id)
 
-  let imported = 0
-
   if (withId.length) {
-    const { error, count } = await supabase
+    const { error } = await supabase
       .from('transactions')
       .upsert(withId, { onConflict: 'user_id,external_id', ignoreDuplicates: true })
-      .select('id', { count: 'exact', head: true })
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-    imported += count ?? withId.length
   }
 
   if (withoutId.length) {
-    const { error, count } = await supabase
+    const { error } = await supabase
       .from('transactions')
       .insert(withoutId)
-      .select('id', { count: 'exact', head: true })
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-    imported += count ?? withoutId.length
   }
 
-  return NextResponse.json({ imported })
+  return NextResponse.json({ imported: records.length })
 }
