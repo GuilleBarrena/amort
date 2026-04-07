@@ -16,6 +16,20 @@
 .filterBtn:hover { border-color: var(--border2); color: var(--text); }
 .filterActive       { background: rgba(232,201,74,0.1) !important; border-color: var(--gold) !important; color: var(--gold) !important; }
 .filterActiveIncome { background: rgba(74,170,110,0.1) !important; border-color: var(--green) !important; color: var(--green) !important; }
+
+/* Mobile filter dropdown (hidden on desktop) */
+.filterDropdown { display: none; position: relative; flex: 1; }
+.filterDropdownTrigger { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 0.4rem; padding: 0.5rem 0.75rem; background: var(--surface); border: 1px solid var(--border); border-radius: 2px; font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); cursor: pointer; transition: all 0.15s; }
+.filterDropdownTrigger:hover { border-color: var(--border2); color: var(--text); }
+.filterDropdownArrow { font-size: 0.5rem; flex-shrink: 0; }
+.filterDropdownMenu { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: var(--surface2); border: 1px solid var(--border2); border-radius: 2px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.4); z-index: 50; animation: ddIn 0.14s ease; }
+@keyframes ddIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+.filterDropdownItem { display: block; width: 100%; padding: 0.7rem 1rem; background: none; border: none; border-bottom: 1px solid var(--border); font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); cursor: pointer; text-align: left; transition: background 0.12s, color 0.12s; }
+.filterDropdownItem:last-child { border-bottom: none; }
+.filterDropdownItem:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+.filterDropdownItemActive  { color: var(--gold) !important; background: rgba(232,201,74,0.08) !important; }
+.filterDropdownItemIncome  { color: var(--green) !important; background: rgba(74,170,110,0.08) !important; }
+
 .bankingBtn { padding: 0.5rem 0.85rem; background: none; border: 1px solid var(--border); border-radius: 2px; font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); cursor: pointer; transition: all 0.15s; white-space: nowrap; }
 .bankingBtn:hover { color: var(--text); border-color: var(--border2); }
 .addBtn { padding: 0.5rem 1rem; background: var(--gold); color: #0d0d0d; border: none; border-radius: 2px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; white-space: nowrap; transition: opacity 0.2s; }
@@ -206,4 +220,10 @@
   .iconPicker { grid-template-columns: repeat(8, 1fr); }
   .subStats { grid-template-columns: 1fr 1fr 1fr; }
   .cardBody { grid-template-columns: 1fr 1fr 1fr; }
+}
+
+/* MOBILE: swap filter toggle group for dropdown */
+@media (max-width: 479px) {
+  .filters { display: none; }
+  .filterDropdown { display: block; }
 }
