@@ -25,6 +25,10 @@ export function monthlyFromSub(entry: Entry): number {
   return entry.period === 'yearly' ? entry.price / 12 : entry.price
 }
 
+export function monthlyFromIncome(entry: Entry): number {
+  return entry.period === 'yearly' ? entry.price / 12 : entry.price
+}
+
 export function fmt(n: number): string {
   return n.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €'
 }

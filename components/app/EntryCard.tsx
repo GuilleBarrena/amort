@@ -1,6 +1,6 @@
 import * as Progress from '@radix-ui/react-progress'
 import type { Entry } from '@/lib/types'
-import { calcAmort, monthlyFromSub, fmt, fmtDate } from '@/lib/calc'
+import { calcAmort, monthlyFromSub, monthlyFromIncome, fmt, fmtDate } from '@/lib/calc'
 import styles from './DashboardClient.module.css'
 
 const CAT_LABELS: Record<string, string> = { entretenimiento:'Entretenimiento', telefonia:'Telefonía', musica:'Música', software:'Software', nube:'Nube', salud:'Salud', educacion:'Educación', seguros:'Seguros', otros:'Otros' }
@@ -21,8 +21,8 @@ export function EntryCard({ entry, onClick }: Props) {
             <span className={styles.cardName}>{entry.name}</span>
           </div>
           <div className={styles.cardBadges}>
-            <span className={`${styles.badge} ${entry.type === 'amort' ? styles.badgeAmort : styles.badgeSub}`}>
-              {entry.type === 'amort' ? 'Compra' : 'Suscripción'}
+            <span className={`${styles.badge} ${entry.type === 'amort' ? styles.badgeAmort : entry.type === 'income' ? styles.badgeIncome : styles.badgeSub}`}>
+              {entry.type === 'amort' ? 'Compra' : entry.type === 'income' ? 'Ingreso' : 'Suscripción'}
             </span>
             <span className={`${styles.badge} ${isSold ? styles.badgeSold : styles.badgeCancelled}`}>
               {isSold ? 'Vendido' : 'Cancelada'}
@@ -71,6 +71,29 @@ export function EntryCard({ entry, onClick }: Props) {
             className={`${styles.barFill} ${c.alreadyDone ? styles.barDone : ''}`}
             style={{ width: `${pct}%` }}
           />
+        </Progress.Root>
+      </div>
+    )
+  }
+
+  if (entry.type === 'income') {
+    const monthly = monthlyFromIncome(entry)
+    const today = new Date(); today.setHours(0, 0, 0, 0)
+    const since = entry.since ? new Date(entry.since + 'T00:00:00') : null
+    const mo = since ? Math.floor((today.getTime() - since.getTime()) / (1000 * 60 * 60 * 24 * 30)) : null
+    return (
+      <div className={`${styles.card} ${styles.cardIncome}`} onClick={onClick}>
+        <div className={styles.cardHeader}>
+          <div className={styles.cardNameRow}><span className={styles.cardIcon}>{entry.icon}</span><span className={styles.cardName}>{entry.name}</span></div>
+          <div className={styles.cardBadges}><span className={`${styles.badge} ${styles.badgeIncome}`}>Ingreso</span></div>
+        </div>
+        <div className={styles.cardBody}>
+          <div><div className={styles.statLabel}>/ mes</div><div className={`${styles.statVal} ${styles.green}`}>{fmt(monthly)}</div></div>
+          <div><div className={styles.statLabel}>/ año</div><div className={styles.statVal}>{fmt(monthly * 12)}</div></div>
+          <div><div className={styles.statLabel}>{mo !== null ? 'Meses activo' : 'Periodo'}</div><div className={styles.statVal}>{mo !== null ? mo + ' m' : (entry.period === 'yearly' ? 'Anual' : 'Mensual')}</div></div>
+        </div>
+        <Progress.Root className={styles.bar} value={100} max={100}>
+          <Progress.Indicator className={`${styles.barFill} ${styles.barIncome}`} style={{ width: '100%' }} />
         </Progress.Root>
       </div>
     )

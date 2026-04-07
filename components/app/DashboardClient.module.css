@@ -1,9 +1,10 @@
 /* SUMMARY */
 .summary { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--border); border-radius: 2px; margin-bottom: 1.2rem; overflow: hidden; }
-.summaryCell { padding: 1rem 1.2rem; border-right: 1px solid var(--border); }
-.summaryCell:last-child { border-right: none; }
+.summaryCell { padding: 0.85rem 1rem; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.summaryCell:nth-child(even) { border-right: none; }
+.summaryCell:nth-last-child(-n+2) { border-bottom: none; }
 .summaryLabel { font-size: 0.5rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; }
-.summaryValue { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.3rem; color: var(--gold); }
+.summaryValue { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.2rem; color: var(--gold); }
 .red { color: var(--red) !important; }
 .green { color: var(--green) !important; }
 .purple { color: var(--purple) !important; }
@@ -13,7 +14,8 @@
 .filters { display: flex; gap: 0.4rem; flex: 1; }
 .filterBtn { flex: 1; padding: 0.5rem 0.4rem; background: var(--surface); border: 1px solid var(--border); border-radius: 2px; font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); cursor: pointer; transition: all 0.15s; }
 .filterBtn:hover { border-color: var(--border2); color: var(--text); }
-.filterActive { background: rgba(232,201,74,0.1) !important; border-color: var(--gold) !important; color: var(--gold) !important; }
+.filterActive       { background: rgba(232,201,74,0.1) !important; border-color: var(--gold) !important; color: var(--gold) !important; }
+.filterActiveIncome { background: rgba(74,170,110,0.1) !important; border-color: var(--green) !important; color: var(--green) !important; }
 .bankingBtn { padding: 0.5rem 0.85rem; background: none; border: 1px solid var(--border); border-radius: 2px; font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); cursor: pointer; transition: all 0.15s; white-space: nowrap; }
 .bankingBtn:hover { color: var(--text); border-color: var(--border2); }
 .addBtn { padding: 0.5rem 1rem; background: var(--gold); color: #0d0d0d; border: none; border-radius: 2px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; white-space: nowrap; transition: opacity 0.2s; }
@@ -23,6 +25,7 @@
 .card { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--gold); border-radius: 2px; margin-bottom: 0.8rem; cursor: pointer; overflow: hidden; transition: background 0.15s, border-color 0.15s; }
 .card:hover { background: var(--surface2); }
 .cardSub { border-left-color: var(--purple); }
+.cardIncome { border-left-color: var(--green); }
 
 .cardHeader { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1rem; border-bottom: 1px solid var(--border); gap: 0.5rem; }
 .cardNameRow { display: flex; align-items: center; gap: 0.5rem; min-width: 0; flex: 1; }
@@ -31,11 +34,12 @@
 .cardBadges { display: flex; gap: 0.3rem; flex-shrink: 0; }
 
 .badge { font-size: 0.48rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.18rem 0.4rem; border-radius: 1px; white-space: nowrap; }
-.badgeAmort { background: rgba(232,201,74,0.12); color: var(--gold); }
-.badgeSub   { background: rgba(155,106,232,0.15); color: var(--purple); }
-.badgeDone  { background: rgba(74,170,110,0.15); color: var(--green); }
-.badgePct   { background: rgba(232,201,74,0.08); color: var(--gold-dim); }
-.badgeEarly { background: rgba(102,102,102,0.15); color: var(--muted); }
+.badgeAmort   { background: rgba(232,201,74,0.12); color: var(--gold); }
+.badgeSub     { background: rgba(155,106,232,0.15); color: var(--purple); }
+.badgeIncome  { background: rgba(74,170,110,0.15); color: var(--green); }
+.badgeDone    { background: rgba(74,170,110,0.15); color: var(--green); }
+.badgePct     { background: rgba(232,201,74,0.08); color: var(--gold-dim); }
+.badgeEarly   { background: rgba(102,102,102,0.15); color: var(--muted); }
 
 .cardBody { display: grid; grid-template-columns: 1fr 1fr; padding: 0.65rem 1rem; gap: 0.5rem; }
 .statLabel { font-size: 0.48rem; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.18rem; }
@@ -44,8 +48,9 @@
 /* PROGRESS (Radix Progress.Root / Progress.Indicator) */
 .bar { height: 2px; background: var(--border); margin: 0 1rem 0.8rem; border-radius: 1px; overflow: hidden; position: relative; }
 .barFill { height: 100%; background: var(--gold); border-radius: 1px; transition: width 0.6s cubic-bezier(0.16,1,0.3,1); }
-.barDone { background: var(--green); }
-.barSub  { background: var(--purple); }
+.barDone   { background: var(--green); }
+.barSub    { background: var(--purple); }
+.barIncome { background: var(--green); }
 .barClosed { background: var(--muted); }
 
 /* EMPTY — two big option cards */
@@ -89,8 +94,10 @@
 
 /* SUB DETAIL */
 .subHero { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--purple); border-radius: 2px; padding: 1.5rem; margin-bottom: 1rem; text-align: center; }
+.incomeHero { border-left-color: var(--green); }
 .subHeroIcon { font-size: 3rem; margin-bottom: 0.5rem; }
 .subHeroPrice { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2rem; color: var(--purple); margin-bottom: 0.3rem; }
+.incomeHeroPrice { color: var(--green); }
 .subHeroLbl { font-size: 0.6rem; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; }
 .subStats { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; margin-bottom: 1rem; }
 .subStat { background: var(--surface); border: 1px solid var(--border); border-radius: 2px; padding: 0.8rem; text-align: center; }
@@ -99,9 +106,11 @@
 
 /* FORM */
 .typeToggle { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--border); border-radius: 2px; overflow: hidden; margin-bottom: 1.5rem; }
+.typeToggleThree { grid-template-columns: 1fr 1fr 1fr; }
 .typeBtn { padding: 0.75rem; background: var(--surface); border: none; font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); cursor: pointer; transition: background 0.2s, color 0.2s; }
 .typeBtnAmort  { background: rgba(232,201,74,0.15); color: var(--gold); }
 .typeBtnSub    { background: rgba(155,106,232,0.15); color: var(--purple); }
+.typeBtnIncome { background: rgba(74,170,110,0.15); color: var(--green); }
 .typeBtnDanger { background: rgba(232,90,74,0.15) !important; color: var(--red) !important; }
 .typeBtnGreen  { background: rgba(74,170,110,0.15) !important; color: var(--green) !important; }
 
@@ -115,11 +124,13 @@
 .iconPicker { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.4rem; }
 .iconOpt { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; background: var(--surface); border: 1px solid var(--border); border-radius: 2px; cursor: pointer; transition: border-color 0.15px; }
 .iconSelected { border-color: var(--purple); background: rgba(155,106,232,0.12); }
+.iconSelectedIncome { border-color: var(--green); background: rgba(74,170,110,0.12); }
 
 .btn { padding: 0.9rem; background: var(--gold); color: #0d0d0d; border: none; border-radius: 2px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: opacity 0.2s; width: 100%; }
 .btn:hover { opacity: 0.9; }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .btnPurple { background: var(--purple); color: #fff; }
+.btnGreen  { background: var(--green); color: #fff; }
 .btnDanger { background: transparent; color: var(--red); border: 1px solid rgba(232,90,74,0.35); margin-top: 0.3rem; }
 .btnDanger:hover { border-color: var(--red); opacity: 1; }
 

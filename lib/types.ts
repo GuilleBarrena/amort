@@ -1,7 +1,7 @@
 export interface Entry {
   id: string
   user_id: string
-  type: 'amort' | 'sub'
+  type: 'amort' | 'sub' | 'income'
   name: string
   price: number
   // amort

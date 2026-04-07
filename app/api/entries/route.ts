@@ -27,6 +27,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Missing amort fields' }, { status: 400 })
   if (type === 'sub' && !period)
     return NextResponse.json({ error: 'Missing sub fields' }, { status: 400 })
+  if (type === 'income' && !period)
+    return NextResponse.json({ error: 'Missing income fields' }, { status: 400 })
 
   const { data, error } = await supabase
     .from('entries')
