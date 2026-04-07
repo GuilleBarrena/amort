@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import type { Entry } from '@/lib/types'
-import { monthlyFromSub, diffMonths, fmt } from '@/lib/calc'
+import { monthlyFromSub, monthlyFromIncome, diffMonths, fmt } from '@/lib/calc'
 import styles from './DashboardClient.module.css'
 
 interface Props {
@@ -17,8 +17,9 @@ export function CloseView({ entry, onBack, onClose, onDelete, loading, showToast
   const [salePrice, setSalePrice] = useState('')
 
   const isAmort = entry.type === 'amort'
+  const isIncome = entry.type === 'income'
   const today = new Date(); today.setHours(0, 0, 0, 0)
-  const monthly = isAmort ? 0 : monthlyFromSub(entry)
+  const monthly = isAmort ? 0 : isIncome ? monthlyFromIncome(entry) : monthlyFromSub(entry)
   const since = entry.since ? new Date(entry.since + 'T00:00:00') : null
   const monthsElapsed = since ? diffMonths(since, today) : 0
   const totalExpenses = isAmort ? 0 : monthsElapsed * monthly
@@ -44,7 +45,7 @@ export function CloseView({ entry, onBack, onClose, onDelete, loading, showToast
           <div className={styles.resultLetter}>A</div>
           <div>
             <div className={styles.resultLabel}>
-              {isAmort ? 'Has vendido el artículo' : 'Has cancelado la suscripción'}
+              {isAmort ? 'Has vendido el artículo' : isIncome ? 'Has dejado de percibir este ingreso' : 'Has cancelado la suscripción'}
             </div>
             {isAmort ? (
               <>
@@ -64,7 +65,9 @@ export function CloseView({ entry, onBack, onClose, onDelete, loading, showToast
               <>
                 <div className={styles.resultValue}>{fmt(totalExpenses)}</div>
                 <div className={styles.resultNote}>
-                  Total gastado en {monthsElapsed.toFixed(1)} meses de suscripción.
+                  {isIncome
+                    ? `Total percibido en ${monthsElapsed.toFixed(1)} meses.`
+                    : `Total gastado en ${monthsElapsed.toFixed(1)} meses de suscripción.`}
                 </div>
               </>
             )}
@@ -74,7 +77,7 @@ export function CloseView({ entry, onBack, onClose, onDelete, loading, showToast
               onClick={handleConfirm}
               disabled={loading}
             >
-              {loading ? 'Guardando…' : isAmort ? 'Registrar venta' : 'Confirmar cancelación'}
+              {loading ? 'Guardando…' : isAmort ? 'Registrar venta' : isIncome ? 'Confirmar cierre' : 'Confirmar cancelación'}
             </button>
           </div>
         </div>
