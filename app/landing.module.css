@@ -358,8 +358,91 @@
   letter-spacing: 0.08em;
 }
 
+/* ── MOBILE NAV ── */
+.navMobile { display: none; align-items: center; gap: 0.8rem; }
+
+.hamburger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 0.45rem 0.55rem;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+}
+
+.hamburgerBar {
+  display: block;
+  width: 100%;
+  height: 1.5px;
+  background: var(--muted);
+  border-radius: 1px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  transform-origin: center;
+}
+.hamburger:hover .hamburgerBar { background: var(--text); }
+
+.bar1Open { transform: translateY(6.5px) rotate(45deg); }
+.bar2Open { opacity: 0; }
+.bar3Open { transform: translateY(-6.5px) rotate(-45deg); }
+
+.mobileMenu {
+  position: sticky;
+  top: 57px;
+  z-index: 99;
+  background: var(--nav-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 0.4rem 1.2rem 0.8rem;
+  gap: 0.1rem;
+  animation: menuIn 0.18s ease;
+}
+@keyframes menuIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+
+.mobileMenuItem {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color 0.15s;
+}
+.mobileMenuItem:hover { color: var(--text); }
+.mobileMenuItem:last-of-type { border-bottom: none; }
+
+.mobileMenuCta {
+  display: block;
+  margin-top: 0.6rem;
+  padding: 0.7rem 1rem;
+  background: var(--gold);
+  color: #0d0d0d;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  text-align: center;
+  transition: opacity 0.2s;
+}
+.mobileMenuCta:hover { opacity: 0.85; }
+
 /* ── RESPONSIVE ── */
 @media (max-width: 640px) {
+  .navLinks { display: none; }
+  .navMobile { display: flex; }
+
   .features { grid-template-columns: 1fr; }
   .featureWide {
     grid-template-columns: 1fr;

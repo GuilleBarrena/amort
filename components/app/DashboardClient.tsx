@@ -25,6 +25,7 @@ interface Props {
 export default function DashboardClient({ initialEntries }: Props) {
   const [entries, setEntries] = useState<Entry[]>(initialEntries)
   const [filter, setFilter] = useState<Filter>('all')
+  const [filterMenuOpen, setFilterMenuOpen] = useState(false)
   const [view, setView] = useState<View>('list')
   const [selected, setSelected] = useState<Entry | null>(null)
   const [loading, setLoading] = useState(false)
@@ -169,6 +170,7 @@ export default function DashboardClient({ initialEntries }: Props) {
         </div>
 
         <div className={styles.toolbar}>
+          {/* Desktop filters */}
           <ToggleGroup.Root
             type="single"
             value={filter}
@@ -181,10 +183,35 @@ export default function DashboardClient({ initialEntries }: Props) {
                 value={f}
                 className={`${styles.filterBtn} ${filter === f ? (f === 'income' ? styles.filterActiveIncome : styles.filterActive) : ''}`}
               >
-                {f === 'all' ? 'Todo' : f === 'amort' ? 'Compras' : f === 'income' ? 'Ingresos' : 'Suscripciones'}
+                {f === 'all' ? 'Todo' : f === 'amort' ? 'Compras' : f === 'income' ? 'Ingresos' : 'Subs'}
               </ToggleGroup.Item>
             ))}
           </ToggleGroup.Root>
+
+          {/* Mobile filter dropdown */}
+          <div className={styles.filterDropdown}>
+            <button
+              className={`${styles.filterDropdownTrigger} ${filter !== 'all' ? (filter === 'income' ? styles.filterActiveIncome : styles.filterActive) : ''}`}
+              onClick={() => setFilterMenuOpen(o => !o)}
+            >
+              {filter === 'all' ? 'Filtro' : filter === 'amort' ? 'Compras' : filter === 'income' ? 'Ingresos' : 'Suscripciones'}
+              <span className={styles.filterDropdownArrow}>{filterMenuOpen ? '▴' : '▾'}</span>
+            </button>
+            {filterMenuOpen && (
+              <div className={styles.filterDropdownMenu}>
+                {(['all', 'amort', 'sub', 'income'] as Filter[]).map(f => (
+                  <button
+                    key={f}
+                    className={`${styles.filterDropdownItem} ${filter === f ? (f === 'income' ? styles.filterDropdownItemIncome : styles.filterDropdownItemActive) : ''}`}
+                    onClick={() => { setFilter(f); setFilterMenuOpen(false) }}
+                  >
+                    {f === 'all' ? 'Todo' : f === 'amort' ? 'Compras' : f === 'income' ? 'Ingresos' : 'Suscripciones'}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
           <button className={styles.bankingBtn} onClick={() => setView('banking')}>🏦</button>
           <button className={styles.addBtn} onClick={openAdd}>+ Nuevo</button>
         </div>
