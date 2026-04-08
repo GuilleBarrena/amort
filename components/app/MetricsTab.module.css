@@ -69,6 +69,29 @@
 .emptyIcon { font-size: 2rem; margin-bottom: 0.8rem; opacity: 0.3; }
 .emptyText { font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; }
 
+/* CATEGORY BREAKDOWN */
+.catList { display: flex; flex-direction: column; gap: 0.85rem; }
+.catRow { display: flex; flex-direction: column; gap: 0.3rem; }
+.catMeta { display: flex; align-items: center; gap: 0.5rem; }
+.catDot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.catName { font-size: 0.68rem; color: var(--text); flex: 1; }
+.catTotal { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--text); font-weight: 500; flex-shrink: 0; }
+.catBarTrack { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; display: flex; }
+.catBarAmort { height: 100%; background: var(--gold); border-radius: 2px 0 0 2px; transition: width 0.5s cubic-bezier(0.16,1,0.3,1); }
+.catBarSub { height: 100%; background: var(--purple); border-radius: 0 2px 2px 0; transition: width 0.5s cubic-bezier(0.16,1,0.3,1); }
+.catSplit { display: flex; align-items: center; gap: 0.4rem; }
+.catSplitAmort { font-size: 0.52rem; color: var(--gold); }
+.catSplitSep { font-size: 0.52rem; color: var(--muted); }
+.catSplitSub { font-size: 0.52rem; color: var(--purple); }
+
+/* TYPE SPLIT */
+.typeSplit { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+.typeSplitItem { display: flex; align-items: center; gap: 0.5rem; }
+.typeDot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.typeLabel { font-size: 0.6rem; color: var(--muted); flex: 1; }
+.typeVal { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--text); }
+.typePct { font-size: 0.52rem; color: var(--muted2); width: 2.5rem; text-align: right; }
+
 /* MOBILE: stack chart vertically */
 @media (max-width: 479px) {
   .chartWrap { flex-direction: column; align-items: flex-start; gap: 1rem; }

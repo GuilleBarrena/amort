@@ -1,6 +1,6 @@
 import * as Progress from '@radix-ui/react-progress'
 import type { Entry } from '@/lib/types'
-import { AMORT_CATEGORIES } from '@/lib/types'
+import { ENTRY_CATEGORIES } from '@/lib/types'
 import { calcAmort, fmt, fmtDate } from '@/lib/calc'
 import styles from './DashboardClient.module.css'
 import { KebabMenu } from './KebabMenu'
@@ -34,7 +34,7 @@ export function AmortDetail({ entry, onBack, onEdit, onClose, onDelete }: Props)
         <div className={styles.metaCell}><div className={styles.metaLabel}>Objetivo / mes</div><div className={styles.metaVal}>{fmt(entry.monthly!)}</div></div>
         <div className={styles.metaCell}><div className={styles.metaLabel}>Fecha compra</div><div className={styles.metaVal}>{fmtDate(new Date(entry.date_str! + 'T00:00:00'))}</div></div>
         <div className={styles.metaCell}><div className={styles.metaLabel}>Meses</div><div className={styles.metaVal}>{c.months.toFixed(1)} m</div></div>
-        {entry.category && <div className={styles.metaCell}><div className={styles.metaLabel}>Categoría</div><div className={styles.metaVal}>{AMORT_CATEGORIES[entry.category] ?? entry.category}</div></div>}
+        {entry.category && <div className={styles.metaCell}><div className={styles.metaLabel}>Categoría</div><div className={styles.metaVal}>{ENTRY_CATEGORIES[entry.category] ?? entry.category}</div></div>}
       </div>
       <div className={styles.resultBlock}>
         <div className={styles.resultLetter}>A</div>

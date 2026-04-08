@@ -15,7 +15,7 @@ interface Props {
 }
 
 export default function AppShell({ initialEntries, userEmail, userName }: Props) {
-  const [tab, setTab] = useState<AppTab>('gastos')
+  const [tab, setTab] = useState<AppTab>('metrics')
 
   return (
     <div className={styles.body}>

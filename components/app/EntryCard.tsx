@@ -1,9 +1,8 @@
 import * as Progress from '@radix-ui/react-progress'
 import type { Entry } from '@/lib/types'
+import { ENTRY_CATEGORIES } from '@/lib/types'
 import { calcAmort, monthlyFromSub, monthlyFromIncome, fmt, fmtDate } from '@/lib/calc'
 import styles from './DashboardClient.module.css'
-
-const CAT_LABELS: Record<string, string> = { entretenimiento:'Entretenimiento', telefonia:'Telefonía', musica:'Música', software:'Software', nube:'Nube', salud:'Salud', educacion:'Educación', seguros:'Seguros', otros:'Otros' }
 
 interface Props {
   entry: Entry
@@ -112,7 +111,7 @@ export function EntryCard({ entry, onClick }: Props) {
       <div className={styles.cardBody}>
         <div><div className={styles.statLabel}>/ mes</div><div className={`${styles.statVal} ${styles.purple}`}>{fmt(monthly)}</div></div>
         <div><div className={styles.statLabel}>/ año</div><div className={styles.statVal}>{fmt(monthly * 12)}</div></div>
-        <div><div className={styles.statLabel}>{mo !== null ? 'Meses activa' : 'Categoría'}</div><div className={styles.statVal}>{mo !== null ? mo + ' m' : CAT_LABELS[entry.category!]}</div></div>
+        <div><div className={styles.statLabel}>{mo !== null ? 'Meses activa' : 'Categoría'}</div><div className={styles.statVal}>{mo !== null ? mo + ' m' : (ENTRY_CATEGORIES[entry.category!] ?? entry.category ?? '—')}</div></div>
       </div>
       <Progress.Root className={styles.bar} value={100} max={100}>
         <Progress.Indicator className={`${styles.barFill} ${styles.barSub}`} style={{ width: '100%' }} />
