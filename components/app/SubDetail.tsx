@@ -1,9 +1,9 @@
 import type { Entry } from '@/lib/types'
+import { SUB_CATEGORIES } from '@/lib/types'
 import { monthlyFromSub, fmt, fmtDate } from '@/lib/calc'
 import styles from './DashboardClient.module.css'
 import { KebabMenu } from './KebabMenu'
-
-const CAT_LABELS: Record<string, string> = { entretenimiento:'Entretenimiento', telefonia:'Telefonía', musica:'Música', software:'Software', nube:'Nube', salud:'Salud', educacion:'Educación', seguros:'Seguros', otros:'Otros' }
+import { CumulativeChart } from './CumulativeChart'
 
 interface Props {
   entry: Entry
@@ -41,9 +41,20 @@ export function SubDetail({ entry, onBack, onEdit, onClose, onDelete }: Props) {
         <div className={styles.subStat}><div className={styles.subStatVal}>{since ? months + ' m' : '—'}</div><div className={styles.subStatLbl}>Meses activa</div></div>
       </div>
       <div className={styles.metaGrid}>
-        <div className={styles.metaCell}><div className={styles.metaLabel}>Categoría</div><div className={styles.metaVal}>{CAT_LABELS[entry.category!] || entry.category}</div></div>
+        <div className={styles.metaCell}><div className={styles.metaLabel}>Categoría</div><div className={styles.metaVal}>{SUB_CATEGORIES[entry.category!] ?? entry.category}</div></div>
         <div className={styles.metaCell}><div className={styles.metaLabel}>Desde</div><div className={styles.metaVal}>{since ? fmtDate(since) : '—'}</div></div>
       </div>
+      {since && (
+        <div className={styles.chartBlock}>
+          <div className={styles.chartTitle}>Coste acumulado</div>
+          <CumulativeChart
+            startDate={since}
+            monthly={monthly}
+            today={today}
+            color="var(--purple)"
+          />
+        </div>
+      )}
     </div>
   )
 }
