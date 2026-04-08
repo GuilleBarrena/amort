@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: 'Amort — Controla lo que gastas',
     short_name: 'Amort',
     description: 'Amortiza tus compras y controla tus suscripciones en un solo lugar.',
-    start_url: '/',
+    start_url: '/dashboard',
     display: 'standalone',
     orientation: 'portrait',
     background_color: '#0d0d0d',
