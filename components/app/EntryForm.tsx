@@ -4,7 +4,7 @@ import * as Label from '@radix-ui/react-label'
 import * as Select from '@radix-ui/react-select'
 import * as ToggleGroup from '@radix-ui/react-toggle-group'
 import type { Entry } from '@/lib/types'
-import { AMORT_CATEGORIES, SUB_CATEGORIES, INCOME_CATEGORIES } from '@/lib/types'
+import { ENTRY_CATEGORIES, ENTRY_CATEGORY_KEYS, INCOME_CATEGORIES } from '@/lib/types'
 import styles from './DashboardClient.module.css'
 
 const ICONS = ['📱','💻','🖥️','📷','🎮','🎧','📺','🎵','🏋️','📚','☁️','🔒','✉️','🏠','🚗','🌍','💊','🎨','📡','⚡','🍿','🎬','🛡️','🔧']
@@ -113,9 +113,9 @@ export function EntryForm({ entry, onBack, onSave, onRequestClose, loading, show
               <Select.Portal>
                 <Select.Content className={styles.selectContent} position="popper" sideOffset={4}>
                   <Select.Viewport className={styles.selectViewport}>
-                    {Object.entries(AMORT_CATEGORIES).map(([k, v]) => (
+                    {ENTRY_CATEGORY_KEYS.map(k => (
                       <Select.Item key={k} value={k} className={styles.selectItem}>
-                        <Select.ItemText>{v}</Select.ItemText>
+                        <Select.ItemText>{ENTRY_CATEGORIES[k]}</Select.ItemText>
                       </Select.Item>
                     ))}
                   </Select.Viewport>
@@ -241,9 +241,9 @@ export function EntryForm({ entry, onBack, onSave, onRequestClose, loading, show
               <Select.Portal>
                 <Select.Content className={styles.selectContent} position="popper" sideOffset={4}>
                   <Select.Viewport className={styles.selectViewport}>
-                    {Object.entries(SUB_CATEGORIES).map(([k, v]) => (
+                    {ENTRY_CATEGORY_KEYS.map(k => (
                       <Select.Item key={k} value={k} className={styles.selectItem}>
-                        <Select.ItemText>{v}</Select.ItemText>
+                        <Select.ItemText>{ENTRY_CATEGORIES[k]}</Select.ItemText>
                       </Select.Item>
                     ))}
                   </Select.Viewport>

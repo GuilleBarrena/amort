@@ -1,5 +1,6 @@
 'use client'
 import type { Entry } from '@/lib/types'
+import { ENTRY_CATEGORIES } from '@/lib/types'
 import { calcAmort, monthlyFromSub, monthlyFromIncome, fmt } from '@/lib/calc'
 import styles from './MetricsTab.module.css'
 
@@ -46,7 +47,6 @@ function DonutChart({ segments, centerLabel, centerValue }: {
           viewBox={`0 0 ${size} ${size}`}
           style={{ transform: 'rotate(-90deg)' }}
         >
-          {/* Background ring */}
           <circle
             cx={cx} cy={cy} r={r}
             fill="none"
@@ -84,6 +84,37 @@ function DonutChart({ segments, centerLabel, centerValue }: {
   )
 }
 
+/* ─── Colores por categoría ───────────────────────────────── */
+const CATEGORY_COLORS: Record<string, string> = {
+  tecnologia:   '#4a8ae8',
+  software:     '#5b6ee1',
+  nube:         '#4ab4e8',
+  electrohogar: '#e8a04a',
+  audio_video:  '#e87a4a',
+  streaming:    '#e84a8a',
+  musica:       '#b44ae8',
+  prensa:       '#888888',
+  ocio:         'var(--purple)',
+  vehiculo:     '#4ae88a',
+  telefonia:    '#4ae8c4',
+  internet:     '#4ac8e8',
+  mobiliario:   '#e8d44a',
+  herramientas: '#d4884a',
+  ropa_moda:    '#e84ab4',
+  alarma:       '#e84a4a',
+  deporte:      '#6ae84a',
+  educacion:    '#4a6ee8',
+  seguros:      '#e8c44a',
+  otros:        '#aaaaaa',
+  // legacy
+  seguro_coche: '#e8c44a',
+  seguro_moto:  '#d4b44a',
+  seguro_hogar: '#c8a44a',
+  seguro_vida:  '#b89444',
+  seguro_salud: '#e84a4a',
+  gimnasio:     '#6ae84a',
+}
+
 /* ─── Main component ──────────────────────────────────────── */
 export default function MetricsTab({ entries }: Props) {
   const activeEntries = entries.filter(e => !e.closed_at)
@@ -107,47 +138,48 @@ export default function MetricsTab({ entries }: Props) {
     ...subEntries.map(e => ({ name: e.name, icon: e.icon, monthly: monthlyFromSub(e), type: e.type as Entry['type'] })),
   ].sort((a, b) => b.monthly - a.monthly).slice(0, 5)
 
-  /* Category breakdown */
-  const catMap: Record<string, number> = {}
-  activeEntries.filter(e => e.type !== 'income').forEach(e => {
-    const key = e.category ?? (e.type === 'amort' ? 'compras' : 'suscripciones')
-    const monthly = e.type === 'amort' && !calcAmort(e).alreadyDone ? e.monthly! : e.type === 'sub' ? monthlyFromSub(e) : 0
-    if (monthly > 0) catMap[key] = (catMap[key] ?? 0) + monthly
+  /* Category breakdown — per category, split by amort/sub */
+  interface CatData { amort: number; sub: number }
+  const catMap: Record<string, CatData> = {}
+
+  activeAmorts.forEach(e => {
+    const key = e.category ?? 'otros'
+    if (!catMap[key]) catMap[key] = { amort: 0, sub: 0 }
+    catMap[key].amort += e.monthly!
+  })
+  subEntries.forEach(e => {
+    const key = e.category ?? 'otros'
+    if (!catMap[key]) catMap[key] = { amort: 0, sub: 0 }
+    catMap[key].sub += monthlyFromSub(e)
   })
 
-  const CATEGORY_COLORS: Record<string, string> = {
-    alimentacion: '#e8a04a',
-    restaurantes: '#e8734a',
-    transporte: '#4a8ae8',
-    hogar: 'var(--green)',
-    ropa: '#e84ab4',
-    ocio: 'var(--purple)',
-    viajes: '#4ae8d4',
-    salud: '#e84a4a',
-    educacion: '#6ae84a',
-    seguros: '#e8d44a',
-    suscripciones: 'var(--purple)',
-    nomina: 'var(--green)',
-    transferencia: '#4a8ae8',
-    otros: '#888888',
-    compras: 'var(--gold)',
-  }
-
-  const catSegments: Segment[] = Object.entries(catMap)
-    .sort((a, b) => b[1] - a[1])
-    .map(([key, value]) => ({
-      label: key.charAt(0).toUpperCase() + key.slice(1),
-      value,
+  const catRows = Object.entries(catMap)
+    .map(([key, { amort, sub }]) => ({
+      key,
+      label: ENTRY_CATEGORIES[key] ?? key,
+      amort,
+      sub,
+      total: amort + sub,
       color: CATEGORY_COLORS[key] ?? '#888',
     }))
+    .filter(r => r.total > 0)
+    .sort((a, b) => b.total - a.total)
+
+  const maxCat = catRows[0]?.total ?? 0
+
+  /* Donut segments — by category */
+  const catSegments: Segment[] = catRows.map(r => ({
+    label: r.label,
+    value: r.total,
+    color: r.color,
+  }))
 
   const typeSegments: Segment[] = [
     { label: 'Compras', value: amortMonthly, color: 'var(--gold)' },
     { label: 'Suscripciones', value: subMonthly, color: 'var(--purple)' },
   ]
 
-  /* Which chart to show: by category if categories are set, else by type */
-  const hasCategories = Object.keys(catMap).some(k => k !== 'compras' && k !== 'suscripciones')
+  const hasCategories = catRows.length > 0
   const chartSegments = hasCategories ? catSegments : typeSegments
 
   return (
@@ -174,7 +206,7 @@ export default function MetricsTab({ entries }: Props) {
         </div>
       </div>
 
-      {/* Distribution chart */}
+      {/* Distribution donut */}
       {totalMonthly > 0 && (
         <div className={styles.card}>
           <div className={styles.cardTitle}>
@@ -185,6 +217,59 @@ export default function MetricsTab({ entries }: Props) {
             centerLabel="/mes"
             centerValue={fmt(totalMonthly)}
           />
+        </div>
+      )}
+
+      {/* Detailed category breakdown */}
+      {catRows.length > 0 && (
+        <div className={styles.card}>
+          <div className={styles.cardTitle}>Desglose por categoría</div>
+          <div className={styles.catList}>
+            {catRows.map(r => (
+              <div key={r.key} className={styles.catRow}>
+                <div className={styles.catMeta}>
+                  <span className={styles.catDot} style={{ background: r.color }} />
+                  <span className={styles.catName}>{r.label}</span>
+                  <span className={styles.catTotal}>{fmt(r.total)}</span>
+                </div>
+                <div className={styles.catBarTrack}>
+                  <div
+                    className={styles.catBarAmort}
+                    style={{ width: `${(r.amort / maxCat) * 100}%` }}
+                  />
+                  <div
+                    className={styles.catBarSub}
+                    style={{ width: `${(r.sub / maxCat) * 100}%` }}
+                  />
+                </div>
+                {(r.amort > 0 && r.sub > 0) && (
+                  <div className={styles.catSplit}>
+                    <span className={styles.catSplitAmort}>{fmt(r.amort)} compras</span>
+                    <span className={styles.catSplitSep}>·</span>
+                    <span className={styles.catSplitSub}>{fmt(r.sub)} suscripciones</span>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Tipo split summary */}
+          {amortMonthly > 0 && subMonthly > 0 && (
+            <div className={styles.typeSplit}>
+              <div className={styles.typeSplitItem}>
+                <span className={styles.typeDot} style={{ background: 'var(--gold)' }} />
+                <span className={styles.typeLabel}>Compras</span>
+                <span className={styles.typeVal}>{fmt(amortMonthly)}</span>
+                <span className={styles.typePct}>{((amortMonthly / totalMonthly) * 100).toFixed(0)}%</span>
+              </div>
+              <div className={styles.typeSplitItem}>
+                <span className={styles.typeDot} style={{ background: 'var(--purple)' }} />
+                <span className={styles.typeLabel}>Suscripciones</span>
+                <span className={styles.typeVal}>{fmt(subMonthly)}</span>
+                <span className={styles.typePct}>{((subMonthly / totalMonthly) * 100).toFixed(0)}%</span>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -247,7 +332,7 @@ export default function MetricsTab({ entries }: Props) {
       )}
 
       {/* Coverage metric */}
-      {totalPending > 0 && totalMonthly > 0 && (
+      {totalPending > 0 && amortMonthly > 0 && (
         <div className={styles.card}>
           <div className={styles.cardTitle}>Tiempo hasta saldarse</div>
           <div className={styles.coverageRow}>
