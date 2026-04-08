@@ -18,8 +18,6 @@ type View = 'list' | 'add' | 'detail' | 'close' | 'banking'
 
 interface Props {
   initialEntries: Entry[]
-  totalMonthly: number
-  totalPending: number
 }
 
 export default function DashboardClient({ initialEntries }: Props) {

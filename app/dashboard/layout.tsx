@@ -10,8 +10,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <div className={styles.shell}>
-      <DashboardNav userEmail={user.email ?? ''} />
-      <main className={styles.main}>{children}</main>
+      <DashboardNav />
+      <div className={styles.body}>{children}</div>
     </div>
   )
 }

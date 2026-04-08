@@ -161,6 +161,7 @@
 
 /* RADIX TOAST */
 .toastViewport { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); z-index: 999; display: flex; flex-direction: column; gap: 0.5rem; width: max-content; max-width: calc(100vw - 2rem); list-style: none; margin: 0; padding: 0; outline: none; }
+@media (max-width: 767px) { .toastViewport { bottom: calc(62px + 1rem); } }
 .toast { background: var(--surface2); border: 1px solid var(--border2); color: var(--text); font-size: 0.7rem; letter-spacing: 0.08em; padding: 0.7rem 1.3rem; border-radius: 2px; white-space: nowrap; }
 .toast[data-state='open']   { animation: fadeIn 0.2s ease; }
 .toast[data-state='closed'] { animation: fadeOut 0.15s ease forwards; }
