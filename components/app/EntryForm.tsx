@@ -4,11 +4,11 @@ import * as Label from '@radix-ui/react-label'
 import * as Select from '@radix-ui/react-select'
 import * as ToggleGroup from '@radix-ui/react-toggle-group'
 import type { Entry } from '@/lib/types'
+import { AMORT_CATEGORIES, SUB_CATEGORIES, INCOME_CATEGORIES } from '@/lib/types'
 import styles from './DashboardClient.module.css'
 
 const ICONS = ['📱','💻','🖥️','📷','🎮','🎧','📺','🎵','🏋️','📚','☁️','🔒','✉️','🏠','🚗','🌍','💊','🎨','📡','⚡','🍿','🎬','🛡️','🔧']
 const INCOME_ICONS = ['💰','💵','🏦','💼','📈','🧾','🎯','💎','🏆','⭐','🌟','✨','💫','🎁','🤑','🏅','🪙','💳','🏷️','📊','🧮','💹','🤝','🌱']
-const CAT_LABELS: Record<string, string> = { entretenimiento:'Entretenimiento', telefonia:'Telefonía', musica:'Música', software:'Software', nube:'Nube', salud:'Salud', educacion:'Educación', seguros:'Seguros', otros:'Otros' }
 
 interface Props {
   entry: Entry | null
@@ -27,26 +27,28 @@ export function EntryForm({ entry, onBack, onSave, onRequestClose, loading, show
   const [fPrice, setFPrice] = useState(entry?.type === 'amort' ? String(entry.price) : '')
   const [fMonthly, setFMonthly] = useState(entry?.type === 'amort' ? String(entry.monthly) : '')
   const [fDate, setFDate] = useState(entry?.type === 'amort' ? entry.date_str! : new Date().toISOString().split('T')[0])
+  const [fCategory, setFCategory] = useState(entry?.type === 'amort' ? (entry.category ?? 'tecnologia') : 'tecnologia')
 
   const [sName, setSName] = useState(entry?.type === 'sub' ? entry.name : '')
   const [sPrice, setSPrice] = useState(entry?.type === 'sub' ? String(entry.price) : '')
   const [sPeriod, setSPeriod] = useState<'monthly' | 'yearly'>(entry?.type === 'sub' ? entry.period! : 'monthly')
-  const [sCategory, setSCategory] = useState(entry?.type === 'sub' ? entry.category! : 'entretenimiento')
+  const [sCategory, setSCategory] = useState(entry?.type === 'sub' ? (entry.category ?? 'streaming') : 'streaming')
   const [selectedIcon, setSelectedIcon] = useState(entry?.type === 'sub' ? entry.icon! : ICONS[0])
 
   const [iName, setIName] = useState(entry?.type === 'income' ? entry.name : '')
   const [iPrice, setIPrice] = useState(entry?.type === 'income' ? String(entry.price) : '')
   const [iPeriod, setIPeriod] = useState<'monthly' | 'yearly'>(entry?.type === 'income' ? entry.period! : 'monthly')
   const [incomeIcon, setIncomeIcon] = useState(entry?.type === 'income' ? entry.icon! : INCOME_ICONS[0])
+  const [iCategory, setICategory] = useState(entry?.type === 'income' ? (entry.category ?? 'nomina') : 'nomina')
 
   async function handleSave() {
     if (formType === 'amort') {
       if (!fName || !fPrice || !fMonthly || !fDate) { showToast('Rellena todos los campos'); return }
-      await onSave({ type: 'amort', name: fName, price: parseFloat(fPrice), monthly: parseFloat(fMonthly), date_str: fDate })
+      await onSave({ type: 'amort', name: fName, price: parseFloat(fPrice), monthly: parseFloat(fMonthly), date_str: fDate, category: fCategory })
     } else if (formType === 'income') {
       if (!iName || !iPrice) { showToast('Rellena nombre e importe'); return }
       const since = entry?.type === 'income' ? entry.since : new Date().toISOString().split('T')[0]
-      await onSave({ type: 'income', name: iName, icon: incomeIcon, price: parseFloat(iPrice), period: iPeriod, since })
+      await onSave({ type: 'income', name: iName, icon: incomeIcon, price: parseFloat(iPrice), period: iPeriod, since, category: iCategory })
     } else {
       if (!sName || !sPrice) { showToast('Rellena nombre e importe'); return }
       const since = entry?.type === 'sub' ? entry.since : new Date().toISOString().split('T')[0]
@@ -101,6 +103,26 @@ export function EntryForm({ entry, onBack, onSave, onRequestClose, loading, show
             <Label.Root htmlFor="f-date" className={styles.label}>Fecha de compra</Label.Root>
             <input id="f-date" className={styles.input} type="date" value={fDate} onChange={e => setFDate(e.target.value)} />
           </div>
+          <div className={styles.field}>
+            <Label.Root htmlFor="f-cat" className={styles.label}>Categoría</Label.Root>
+            <Select.Root value={fCategory} onValueChange={setFCategory}>
+              <Select.Trigger id="f-cat" className={styles.selectTrigger}>
+                <Select.Value />
+                <Select.Icon className={styles.selectIcon}>▾</Select.Icon>
+              </Select.Trigger>
+              <Select.Portal>
+                <Select.Content className={styles.selectContent} position="popper" sideOffset={4}>
+                  <Select.Viewport className={styles.selectViewport}>
+                    {Object.entries(AMORT_CATEGORIES).map(([k, v]) => (
+                      <Select.Item key={k} value={k} className={styles.selectItem}>
+                        <Select.ItemText>{v}</Select.ItemText>
+                      </Select.Item>
+                    ))}
+                  </Select.Viewport>
+                </Select.Content>
+              </Select.Portal>
+            </Select.Root>
+          </div>
           <button className={styles.btn} onClick={handleSave} disabled={loading}>{loading ? 'Guardando…' : 'Guardar compra'}</button>
           {isEditing && entry && <button className={`${styles.btn} ${styles.btnDanger}`} onClick={() => onRequestClose(entry)} disabled={loading}>Cerrar entrada</button>}
         </div>
@@ -144,6 +166,26 @@ export function EntryForm({ entry, onBack, onSave, onRequestClose, loading, show
                 </Select.Portal>
               </Select.Root>
             </div>
+          </div>
+          <div className={styles.field}>
+            <Label.Root htmlFor="i-cat" className={styles.label}>Categoría</Label.Root>
+            <Select.Root value={iCategory} onValueChange={setICategory}>
+              <Select.Trigger id="i-cat" className={styles.selectTrigger}>
+                <Select.Value />
+                <Select.Icon className={styles.selectIcon}>▾</Select.Icon>
+              </Select.Trigger>
+              <Select.Portal>
+                <Select.Content className={styles.selectContent} position="popper" sideOffset={4}>
+                  <Select.Viewport className={styles.selectViewport}>
+                    {Object.entries(INCOME_CATEGORIES).map(([k, v]) => (
+                      <Select.Item key={k} value={k} className={styles.selectItem}>
+                        <Select.ItemText>{v}</Select.ItemText>
+                      </Select.Item>
+                    ))}
+                  </Select.Viewport>
+                </Select.Content>
+              </Select.Portal>
+            </Select.Root>
           </div>
           <button className={`${styles.btn} ${styles.btnGreen}`} onClick={handleSave} disabled={loading}>{loading ? 'Guardando…' : 'Guardar ingreso'}</button>
           {isEditing && entry && <button className={`${styles.btn} ${styles.btnDanger}`} onClick={() => onRequestClose(entry)} disabled={loading}>Cerrar entrada</button>}
@@ -199,7 +241,7 @@ export function EntryForm({ entry, onBack, onSave, onRequestClose, loading, show
               <Select.Portal>
                 <Select.Content className={styles.selectContent} position="popper" sideOffset={4}>
                   <Select.Viewport className={styles.selectViewport}>
-                    {Object.entries(CAT_LABELS).map(([k, v]) => (
+                    {Object.entries(SUB_CATEGORIES).map(([k, v]) => (
                       <Select.Item key={k} value={k} className={styles.selectItem}>
                         <Select.ItemText>{v}</Select.ItemText>
                       </Select.Item>

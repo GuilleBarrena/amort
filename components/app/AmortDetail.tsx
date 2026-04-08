@@ -1,8 +1,10 @@
 import * as Progress from '@radix-ui/react-progress'
 import type { Entry } from '@/lib/types'
+import { AMORT_CATEGORIES } from '@/lib/types'
 import { calcAmort, fmt, fmtDate } from '@/lib/calc'
 import styles from './DashboardClient.module.css'
 import { KebabMenu } from './KebabMenu'
+import { CumulativeChart } from './CumulativeChart'
 
 interface Props {
   entry: Entry
@@ -32,6 +34,7 @@ export function AmortDetail({ entry, onBack, onEdit, onClose, onDelete }: Props)
         <div className={styles.metaCell}><div className={styles.metaLabel}>Objetivo / mes</div><div className={styles.metaVal}>{fmt(entry.monthly!)}</div></div>
         <div className={styles.metaCell}><div className={styles.metaLabel}>Fecha compra</div><div className={styles.metaVal}>{fmtDate(new Date(entry.date_str! + 'T00:00:00'))}</div></div>
         <div className={styles.metaCell}><div className={styles.metaLabel}>Meses</div><div className={styles.metaVal}>{c.months.toFixed(1)} m</div></div>
+        {entry.category && <div className={styles.metaCell}><div className={styles.metaLabel}>Categoría</div><div className={styles.metaVal}>{AMORT_CATEGORIES[entry.category] ?? entry.category}</div></div>}
       </div>
       <div className={styles.resultBlock}>
         <div className={styles.resultLetter}>A</div>
@@ -63,6 +66,16 @@ export function AmortDetail({ entry, onBack, onEdit, onClose, onDelete }: Props)
           <div className={`${styles.resultValue} ${c.virtualPrice === 0 ? styles.green : ''}`}>{fmt(c.virtualPrice)}</div>
           <div className={styles.resultNote}>{c.virtualPrice === 0 ? 'Completamente amortizado.' : `${fmt(entry.price)} − ${fmt(c.amortized)} amortizados.`}</div>
         </div>
+      </div>
+      <div className={styles.chartBlock}>
+        <div className={styles.chartTitle}>Gasto acumulado</div>
+        <CumulativeChart
+          startDate={new Date(entry.date_str! + 'T00:00:00')}
+          monthly={entry.monthly!}
+          today={new Date()}
+          amortPrice={entry.price}
+          color="var(--red)"
+        />
       </div>
     </div>
   )

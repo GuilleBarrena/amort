@@ -1,7 +1,9 @@
 import type { Entry } from '@/lib/types'
+import { INCOME_CATEGORIES } from '@/lib/types'
 import { monthlyFromIncome, fmt, fmtDate } from '@/lib/calc'
 import styles from './DashboardClient.module.css'
 import { KebabMenu } from './KebabMenu'
+import { CumulativeChart } from './CumulativeChart'
 
 interface Props {
   entry: Entry
@@ -41,7 +43,19 @@ export function IncomeDetail({ entry, onBack, onEdit, onClose, onDelete }: Props
       <div className={styles.metaGrid}>
         <div className={styles.metaCell}><div className={styles.metaLabel}>Desde</div><div className={styles.metaVal}>{since ? fmtDate(since) : '—'}</div></div>
         <div className={styles.metaCell}><div className={styles.metaLabel}>Periodo</div><div className={styles.metaVal}>{entry.period === 'yearly' ? 'Anual' : 'Mensual'}</div></div>
+        {entry.category && <div className={styles.metaCell}><div className={styles.metaLabel}>Categoría</div><div className={styles.metaVal}>{INCOME_CATEGORIES[entry.category] ?? entry.category}</div></div>}
       </div>
+      {since && (
+        <div className={styles.chartBlock}>
+          <div className={styles.chartTitle}>Ingresos acumulados</div>
+          <CumulativeChart
+            startDate={since}
+            monthly={monthly}
+            today={today}
+            color="var(--green)"
+          />
+        </div>
+      )}
     </div>
   )
 }

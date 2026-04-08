@@ -228,3 +228,8 @@
   .filters { display: none; }
   .filterDropdown { display: block; }
 }
+
+
+/* CHART block */
+.chartBlock { margin-top: 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 2px; padding: 1rem 1rem 0.5rem; }
+.chartTitle { font-size: 0.52rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
