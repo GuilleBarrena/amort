@@ -1,0 +1,21 @@
+.body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+  max-width: 760px;
+  min-width: 0;
+}
+
+@media (max-width: 767px) {
+  .content {
+    padding: 1rem;
+    /* Extra bottom padding so content isn't hidden behind the bottom bar */
+    padding-bottom: calc(1rem + 70px);
+  }
+}

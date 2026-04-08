@@ -1,0 +1,77 @@
+.root { display: flex; flex-direction: column; gap: 1rem; }
+
+/* SUMMARY */
+.summary { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--border); border-radius: 2px; overflow: hidden; }
+.summaryCell { padding: 0.85rem 1rem; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.summaryCell:nth-child(even) { border-right: none; }
+.summaryCell:nth-last-child(-n+2) { border-bottom: none; }
+.summaryLabel { font-size: 0.5rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; }
+.summaryValue { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.2rem; color: var(--gold); }
+.red   { color: var(--red)   !important; }
+.green { color: var(--green) !important; }
+.gold  { color: var(--gold)  !important; }
+.purple { color: var(--purple) !important; }
+
+/* CARD */
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 2px; padding: 1rem 1.1rem; }
+.cardTitle { font-size: 0.5rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+
+/* DONUT CHART */
+.chartWrap { display: flex; align-items: center; gap: 1.5rem; }
+.chartSvgWrap { position: relative; flex-shrink: 0; width: 148px; height: 148px; }
+.chartCenter {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+}
+.chartCenterVal { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; color: var(--text); line-height: 1.1; }
+.chartCenterLbl { font-size: 0.45rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-top: 0.2rem; }
+
+.legend { display: flex; flex-direction: column; gap: 0.55rem; flex: 1; min-width: 0; }
+.legendItem { display: flex; align-items: center; gap: 0.5rem; min-width: 0; }
+.legendDot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.legendLabel { font-size: 0.58rem; color: var(--text); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.legendVal { font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; color: var(--muted); flex-shrink: 0; }
+
+/* STATS ROW */
+.statsRow { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.6rem; }
+.statBox { background: var(--surface); border: 1px solid var(--border); border-radius: 2px; padding: 0.8rem 0.6rem; text-align: center; }
+.statNum { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.5rem; color: var(--text); line-height: 1; margin-bottom: 0.3rem; }
+.statLbl { font-size: 0.42rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); line-height: 1.4; }
+
+/* SAVINGS RATE */
+.savingsRow { display: flex; align-items: baseline; gap: 0.75rem; margin-bottom: 0.75rem; }
+.savingsPct { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.8rem; line-height: 1; }
+.savingsNote { font-size: 0.6rem; color: var(--muted); line-height: 1.5; }
+.savingsBar { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.savingsFill { height: 100%; border-radius: 2px; transition: width 0.6s cubic-bezier(0.16,1,0.3,1); }
+.savingsFillGreen { background: var(--green); }
+.savingsFillRed   { background: var(--red); }
+
+/* TOP LIST */
+.topList { display: flex; flex-direction: column; gap: 0.5rem; }
+.topRow { display: flex; align-items: center; gap: 0.6rem; }
+.topRank { font-size: 0.5rem; color: var(--muted2); width: 1rem; text-align: center; flex-shrink: 0; }
+.topIcon { font-size: 0.95rem; flex-shrink: 0; }
+.topName { font-size: 0.72rem; color: var(--text); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.topVal { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; font-weight: 500; flex-shrink: 0; }
+
+/* COVERAGE */
+.coverageRow { display: flex; align-items: baseline; gap: 0.75rem; }
+.coverageVal { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.4rem; color: var(--text); }
+.coverageNote { font-size: 0.6rem; color: var(--muted); }
+
+/* EMPTY */
+.empty { text-align: center; padding: 3rem 2rem; color: var(--muted); }
+.emptyIcon { font-size: 2rem; margin-bottom: 0.8rem; opacity: 0.3; }
+.emptyText { font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; }
+
+/* MOBILE: stack chart vertically */
+@media (max-width: 479px) {
+  .chartWrap { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .statsRow { grid-template-columns: 1fr 1fr; }
+  .statsRow .statBox:last-child { grid-column: span 2; }
+}

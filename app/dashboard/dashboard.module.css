@@ -1,18 +1,13 @@
 .shell {
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   background: var(--bg);
+  overflow: hidden;
 }
 
-.main {
+.body {
   flex: 1;
-  max-width: 720px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 1.5rem;
-}
-
-@media (max-width: 480px) {
-  .main { padding: 1rem; }
+  display: flex;
+  overflow: hidden;
 }
