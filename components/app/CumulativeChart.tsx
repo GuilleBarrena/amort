@@ -83,7 +83,7 @@ export function CumulativeChart({ startDate, monthly, today, amortPrice, color }
 
   // Grid lines (3 horizontal)
   const gridValues = [maxValue * 0.25, maxValue * 0.5, maxValue * 0.75, maxValue].map(v => Math.round(v))
-  const uniqueGridVals = [...new Set(gridValues)].filter(v => v > 0)
+  const uniqueGridVals = gridValues.filter((v, i, arr) => v > 0 && arr.indexOf(v) === i)
 
   // X axis labels: start, today (if visible), end
   const startLabel = startDate.toLocaleDateString('es-ES', { month: 'short', year: '2-digit' })
