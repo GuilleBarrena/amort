@@ -1,7 +1,7 @@
 'use client'
 import styles from './AppNav.module.css'
 
-export type AppTab = 'metrics' | 'gastos' | 'inversiones' | 'cuenta'
+export type AppTab = 'metrics' | 'gastos' | 'inversiones' | 'wallet' | 'cuenta'
 
 const TABS: { id: AppTab; label: string; icon: React.ReactNode }[] = [
   {
@@ -36,6 +36,17 @@ const TABS: { id: AppTab; label: string; icon: React.ReactNode }[] = [
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
         <polyline points="17 6 23 6 23 12" />
+      </svg>
+    ),
+  },
+  {
+    id: 'wallet',
+    label: 'Wallet',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="7" width="20" height="14" rx="2" />
+        <path d="M16 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" fill="currentColor" stroke="none" />
+        <path d="M22 7V5a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2" />
       </svg>
     ),
   },
